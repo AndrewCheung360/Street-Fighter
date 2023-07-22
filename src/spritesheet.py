@@ -26,10 +26,10 @@ class SpriteSheet:
             
         return image
     
-    def get_animation(self, coords, frame_duration, mode, scale=None, flip=None):
+    def get_animation(self, coords, frame_durations, mode, scale=None, flip=None):
 		# extract images & create animation
         frames = [self.get_image(frame, scale, flip) for frame in coords]
-        return Animation(frames, frame_duration, mode)
+        return Animation(frames, frame_durations, mode)
 
     
 class Animation:
@@ -37,30 +37,34 @@ class Animation:
             NORMAL = 1,
             LOOP = 2
 
-    def __init__(self, frames, frame_duration, mode):
+    def __init__(self, frames, frame_durations, mode):
+        if len(frames) != len(frame_durations):
+            raise ValueError("Number of frames and frame_durations should be the same")
         # animation settings
         self.frames = frames
-        self.frame_duration = frame_duration
-        self.animation_duration = len(self.frames)*self.frame_duration
+        self.frame_durations = frame_durations
+        self.animation_duration = sum(frame_durations)
         self.mode = mode
 
     def get_frame(self, state_time):
         frame_number = self.get_frame_index(state_time)
         return self.frames[frame_number]
 
+    
     def get_frame_index(self, state_time):
         if len(self.frames) == 1:
             return 0
 
-        frame_number = int(state_time/self.frame_duration)
+        total_duration = 0
+        for i, duration in enumerate(self.frame_durations):
+            total_duration += duration
+            if state_time < total_duration:
+                return i
 
         if self.mode == self.PlayMode.NORMAL:
-            frame_number = min(len(self.frames) - 1, frame_number)
-        elif self.mode == self.PlayMode.LOOP:
-            frame_number = frame_number % len(self.frames)
+            return len(self.frames) - 1
 
-        return frame_number
+        return int((state_time % self.animation_duration) / self.animation_duration * len(self.frames))
 
     def is_animation_finished(self, state_time):
-        frame_number = int(state_time/self.frame_duration)
-        return len(self.frames) - 1 < frame_number    
+        return state_time >= self.animation_duration
