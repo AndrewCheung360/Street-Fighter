@@ -2,6 +2,7 @@ import pygame as pg
 from settings import *
 from spritesheet import SpriteSheet, Animation
 from animatedsprite import AnimatedSprite
+from characters.MoveStates import *
 
 vec = pg.math.Vector2
 
@@ -12,26 +13,33 @@ class Fighter(AnimatedSprite):
         self.mode = mode
         self.playerNum = playerNum
         self.name = name
+        self.direction = direction
+        
+        #spritesheet
         self.sheet = sheet
+        self.bg = bg
+        
+        #animation frames
         self.idleFrames = idleFrames
         self.walkFrames = walkFrames
         self.jumpFrames = jumpFrames
-        self.bg = bg
-        self.direction = direction
+        
+        #initial state
+        self.state = STATE_IDLE
+        
+        #load animations during initialization
         self.load()
         
+        #sprite image and animation
         self.image = self.active_anim.get_frame(0)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
   
+        #movement and position
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
-        self.acceleration = 1.0  # Adjust the acceleration value as needed
-        self.friction = 0.2  # Adjust the friction value as needed
-        self.idle_threshold = 0.05  # Adjust the idle detection threshold as needed
-        self.jump_speed = -27.0  # Adjust the jump speed as needed
-        self.gravity = 1.0  # Adjust the gravity value as needed
         
+    #store animations from spritesheet
     def load(self):
         spritesheet = SpriteSheet(self.sheet, self.bg)
         
@@ -60,110 +68,84 @@ class Fighter(AnimatedSprite):
         self.store_animation("jump", jump_animation)
         jump_animationR = spritesheet.get_animation(self.jumpFrames[0], self.jumpFrames[1], Animation.PlayMode.NORMAL, 4, True)
         self.store_animation("jumpR", jump_animationR)
-        
-    def handle_x_movement(self, keys):
-        if (self.mode == "local" and self.playerNum == "player1") or self.mode == "multi":
-            if keys[pg.K_d]:
-                # Accelerate to the right
-                self.vel.x += self.acceleration
-            elif keys[pg.K_a]:
-                # Accelerate to the left
-                self.vel.x -= self.acceleration
-            else:
-                # Apply friction to slow down horizontally
-                self.vel.x *= (1 - self.friction)
-        elif self.mode == "local" and self.playerNum == "player2":
-            if keys[pg.K_RIGHT]:
-                # Accelerate to the right
-                self.vel.x += self.acceleration
-            elif keys[pg.K_LEFT]:
-                # Accelerate to the left
-                self.vel.x -= self.acceleration
-            else:
-                # Apply friction to slow down horizontally
-                self.vel.x *= (1 - self.friction)
-        # Limit maximum velocity to avoid overly fast movement
-        max_velocity = 6
-        self.vel.x = max(-max_velocity, min(self.vel.x, max_velocity))
-
-        # Apply a small threshold for idle detection
-        if abs(self.vel.x) < self.idle_threshold:
-            self.vel.x = 0.0 
-    
-    def handle_jump(self, keys):
-        if (self.mode == "local" and self.playerNum == "player1") or self.mode == "multi":
-            if keys[pg.K_SPACE] and self.pos.y == STAGE_FLOOR:
-                # Jump
-                self.vel.y = self.jump_speed
-                if self.direction == "right":
-                    self.set_active_animation("jump")
-                else:
-                    self.set_active_animation("jumpR")  # Set the jump animation
-        elif self.mode == "local" and self.playerNum == "player2":
-            if keys[pg.K_KP0] and self.pos.y == STAGE_FLOOR:
-                # Jump
-                self.vel.y = self.jump_speed
-                if self.direction == "right":
-                    self.set_active_animation("jump")
-                else:
-                    self.set_active_animation("jumpR")  # Set the jump animation
-    def apply_gravity(self):
-        if not self.pos.y == STAGE_FLOOR:
-            self.vel.y += self.gravity
-            max_fall_speed = 20  # Adjust the maximum fall speed as needed
-            self.vel.y = min(self.vel.y, max_fall_speed)    
-    def get_keys(self):
-        keys = pg.key.get_pressed()
-        self.handle_x_movement(keys)
-        self.handle_jump(keys)
-        
+     
     def flipDirection(self):
         if self.direction == "right":
             self.direction = "left"
         else:
             self.direction = "right"
-            
-    def handle_movement_animation(self):
-        if abs(self.vel.x) > 0.05 and self.pos.y == STAGE_FLOOR:
-            # Character is moving, play the walking or backwards walking animation
-            if self.vel.x > 0:
-                if self.direction == "right":
-                    self.set_active_animation("walk")
-                else:
-                    self.set_active_animation("backwalkR")
-            else:
-                if self.direction == "right":
-                    self.set_active_animation("backwalk")
-                else:
-                    self.set_active_animation("walkR")
-        else:
-            # Character is not moving horizontally, play the idle animation
-            if self.direction == "right":
-                if self.pos.y == STAGE_FLOOR:
-                    self.set_active_animation("idle")
-            else:
-                if self.pos.y == STAGE_FLOOR:
-                    self.set_active_animation("idleR")
-        
+                                
+    def apply_gravity(self):
+        if not self.pos.y == STAGE_FLOOR:
+            self.vel.y += GRAVITY
+            self.vel.y = min(self.vel.y, MAX_FALL_SPEED)  
     
+    def handle_idle(self, state):
+        if state == STATE_IDLE and self.pos.y == STAGE_FLOOR:
+            self.vel = vec(0, 0)
+            if self.direction == "right":
+                self.set_active_animation("idle")
+            else:
+                self.set_active_animation("idleR")
+    
+    def handle_x_movement(self, state):    
+        if state == STATE_WALK:
+            if self.direction == "right":
+                self.vel.x = min(self.vel.x + ACCELERATION, MAX_X_VELOCITY)
+                self.set_active_animation("walk")
+            else:
+                self.vel.x = max(self.vel.x - ACCELERATION, -MAX_X_VELOCITY)
+                self.set_active_animation("walkR")
+        elif state == STATE_BACKWALK:
+            if self.direction == "right":
+                self.vel.x = max(self.vel.x - ACCELERATION, -MAX_X_VELOCITY)
+                self.set_active_animation("backwalk")
+            else:
+                self.vel.x = min(self.vel.x + ACCELERATION, MAX_X_VELOCITY)
+                self.set_active_animation("backwalkR")
+            
+        # self.pos.x += self.vel.x
+    
+    def handle_jump(self, state):
+        if state == STATE_JUMP and self.pos.y == STAGE_FLOOR:
+            if self.direction == "right":
+                self.set_active_animation("jump")
+            else:
+                self.set_active_animation("jumpR")
+            self.vel.y = JUMP_SPEED
+            
+            # self.pos.y += self.vel.y
+    
+    def handle_states(self):
+        keys = pg.key.get_pressed()
+        current_state = update_state(keys, self.direction, self.playerNum, self.state, self.mode)
+        if current_state == STATE_IDLE:
+            self.state = STATE_IDLE
+            state_idle(self, self.state)
+        elif current_state == STATE_WALK or current_state == STATE_BACKWALK:
+            self.state = current_state
+            state_walk(self, self.state)
+        elif current_state == STATE_JUMP:
+            self.state = STATE_JUMP
+            state_jump(self, self.state)
             
     def animate(self):
-        self.handle_movement_animation()
-
         bottom = self.rect.bottom
-        
         self.image = self.active_anim.get_frame(self.elapsed_time)
         self.rect = self.image.get_rect()
         self.rect.bottom = bottom
 
     def update(self):
         super().update(1/FPS)
+        self.handle_states()
         self.animate()
-        self.get_keys()
-        self.pos += self.vel
         
-        # Apply gravity
+        # apply gravity
         self.apply_gravity()
+        
+        # Update the sprite's position
+        self.pos += self.vel
+
         # Check for collision with the stage floor
         if self.pos.y >= STAGE_FLOOR:
             self.pos.y = STAGE_FLOOR
