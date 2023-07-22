@@ -36,29 +36,29 @@ class Fighter(AnimatedSprite):
         spritesheet = SpriteSheet(self.sheet, self.bg)
         
         #idle animation
-        idle_animation = spritesheet.get_animation(self.idleFrames, 0.15, Animation.PlayMode.LOOP, 4)
+        idle_animation = spritesheet.get_animation(self.idleFrames[0], self.idleFrames[1], Animation.PlayMode.LOOP, 4)
         self.store_animation("idle", idle_animation)
-        idle_animationR = spritesheet.get_animation(self.idleFrames, 0.15, Animation.PlayMode.LOOP, 4, True)
+        idle_animationR = spritesheet.get_animation(self.idleFrames[0], self.idleFrames[1], Animation.PlayMode.LOOP, 4, True)
         self.store_animation("idleR", idle_animationR)
         
         #walk animation
-        walk_animation = spritesheet.get_animation(self.walkFrames, 0.1, Animation.PlayMode.LOOP, 4)
+        walk_animation = spritesheet.get_animation(self.walkFrames[0], self.walkFrames[1], Animation.PlayMode.LOOP, 4)
         self.store_animation("walk", walk_animation)
-        walk_animationR = spritesheet.get_animation(self.walkFrames, 0.1, Animation.PlayMode.LOOP, 4, True)
+        walk_animationR = spritesheet.get_animation(self.walkFrames[0], self.walkFrames[1], Animation.PlayMode.LOOP, 4, True)
         self.store_animation("walkR", walk_animationR)
         
         #backwalk animation
-        backwalk = list(self.walkFrames)  # Create a copy of the array
+        backwalk = list(self.walkFrames[0])  # Create a copy of the array
         backwalk.reverse()  # Reverse the copy
-        backwalk_animation = spritesheet.get_animation(backwalk, 0.1, Animation.PlayMode.LOOP, 4)
+        backwalk_animation = spritesheet.get_animation(backwalk, self.walkFrames[1], Animation.PlayMode.LOOP, 4)
         self.store_animation("backwalk", backwalk_animation)
-        backwalk_animationR = spritesheet.get_animation(backwalk, 0.1, Animation.PlayMode.LOOP, 4, True)
+        backwalk_animationR = spritesheet.get_animation(backwalk, self.walkFrames[1], Animation.PlayMode.LOOP, 4, True)
         self.store_animation("backwalkR", backwalk_animationR)
         
         #jump animation
-        jump_animation = spritesheet.get_animation(self.jumpFrames, 0.12, Animation.PlayMode.NORMAL, 4)
+        jump_animation = spritesheet.get_animation(self.jumpFrames[0], self.jumpFrames[1], Animation.PlayMode.NORMAL, 4)
         self.store_animation("jump", jump_animation)
-        jump_animationR = spritesheet.get_animation(self.jumpFrames, 0.12, Animation.PlayMode.NORMAL, 4, True)
+        jump_animationR = spritesheet.get_animation(self.jumpFrames[0], self.jumpFrames[1], Animation.PlayMode.NORMAL, 4, True)
         self.store_animation("jumpR", jump_animationR)
         
     def handle_x_movement(self, keys):
@@ -124,7 +124,7 @@ class Fighter(AnimatedSprite):
             self.direction = "right"
             
     def handle_movement_animation(self):
-        if abs(self.vel.x) > 0.05:
+        if abs(self.vel.x) > 0.05 and self.pos.y == STAGE_FLOOR:
             # Character is moving, play the walking or backwards walking animation
             if self.vel.x > 0:
                 if self.direction == "right":
@@ -139,10 +139,10 @@ class Fighter(AnimatedSprite):
         else:
             # Character is not moving horizontally, play the idle animation
             if self.direction == "right":
-                if self.vel.y == 0:
+                if self.pos.y == STAGE_FLOOR:
                     self.set_active_animation("idle")
             else:
-                if self.vel.y == 0:
+                if self.pos.y == STAGE_FLOOR:
                     self.set_active_animation("idleR")
         
     
@@ -151,6 +151,7 @@ class Fighter(AnimatedSprite):
         self.handle_movement_animation()
 
         bottom = self.rect.bottom
+        
         self.image = self.active_anim.get_frame(self.elapsed_time)
         self.rect = self.image.get_rect()
         self.rect.bottom = bottom
@@ -163,11 +164,10 @@ class Fighter(AnimatedSprite):
         
         # Apply gravity
         self.apply_gravity()
-
         # Check for collision with the stage floor
         if self.pos.y >= STAGE_FLOOR:
             self.pos.y = STAGE_FLOOR
             self.vel.y = 0
-            
+          
         # Update the sprite's rect position
         self.rect.midbottom = self.pos
