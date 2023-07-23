@@ -25,13 +25,13 @@ class AnimatedSprite(pg.sprite.Sprite):
 			return
 
 		# check if this animation is already running
-		if name == self.active_name:
+		if self.active_name == name and self.active_anim != None and self.active_anim.is_animation_finished(self.elapsed_time) == False:
 			return
 
 		self.active_name = name
 		self.active_anim = self.animation_storage[name]
 		self.elapsed_time = 0
-
+  
 	def is_animation_finished(self):
 		return self.active_anim.is_animation_finished(self.elapsed_time)
 

@@ -7,7 +7,7 @@ from characters.MoveStates import *
 vec = pg.math.Vector2
 
 class Fighter(AnimatedSprite):
-    def __init__(self, mode, playerNum, name, sheet, bg, x, y, idleFrames, walkFrames, jumpFrames, direction, *groups):
+    def __init__(self, mode, playerNum, name, sheet, bg, x, y, idleFrames, walkFrames, jumpFrames, sideJumpFrames, crouchFrame, direction, *groups):
         super().__init__(*groups)
         
         self.mode = mode
@@ -23,7 +23,8 @@ class Fighter(AnimatedSprite):
         self.idleFrames = idleFrames
         self.walkFrames = walkFrames
         self.jumpFrames = jumpFrames
-        
+        self.sideJumpFrames = sideJumpFrames
+        self.crouchFrame = crouchFrame
         #initial state
         self.state = STATE_IDLE
         
@@ -33,7 +34,6 @@ class Fighter(AnimatedSprite):
         #sprite image and animation
         self.image = self.active_anim.get_frame(0)
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
   
         #movement and position
         self.pos = vec(x, y)
@@ -68,7 +68,26 @@ class Fighter(AnimatedSprite):
         self.store_animation("jump", jump_animation)
         jump_animationR = spritesheet.get_animation(self.jumpFrames[0], self.jumpFrames[1], Animation.PlayMode.NORMAL, 4, True)
         self.store_animation("jumpR", jump_animationR)
+        
+        #forward jump animation
+        forward_jump_animation = spritesheet.get_animation(self.sideJumpFrames[0], self.sideJumpFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("forward_jump", forward_jump_animation)
+        forward_jump_animationR = spritesheet.get_animation(self.sideJumpFrames[0], self.sideJumpFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("forward_jumpR", forward_jump_animationR)
+        
+        #backward jump animation
+        backJump = [self.sideJumpFrames[0][0]] + self.sideJumpFrames[0][1:][::-1]
+        backward_jump_animation = spritesheet.get_animation(backJump, self.sideJumpFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("backward_jump", backward_jump_animation)
+        backward_jump_animationR = spritesheet.get_animation(backJump, self.sideJumpFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("backward_jumpR", backward_jump_animationR)
      
+        #crouch animation
+        crouch_animation = spritesheet.get_animation(self.crouchFrame[0], self.crouchFrame[1], Animation.PlayMode.LOOP, 4)
+        self.store_animation("crouch", crouch_animation)
+        crouch_animationR = spritesheet.get_animation(self.crouchFrame[0], self.crouchFrame[1], Animation.PlayMode.LOOP, 4, True)
+        self.store_animation("crouchR", crouch_animationR)
+
     def flipDirection(self):
         if self.direction == "right":
             self.direction = "left"
@@ -79,46 +98,10 @@ class Fighter(AnimatedSprite):
         if not self.pos.y == STAGE_FLOOR:
             self.vel.y += GRAVITY
             self.vel.y = min(self.vel.y, MAX_FALL_SPEED)  
-    
-    def handle_idle(self, state):
-        if state == STATE_IDLE and self.pos.y == STAGE_FLOOR:
-            self.vel = vec(0, 0)
-            if self.direction == "right":
-                self.set_active_animation("idle")
-            else:
-                self.set_active_animation("idleR")
-    
-    def handle_x_movement(self, state):    
-        if state == STATE_WALK:
-            if self.direction == "right":
-                self.vel.x = min(self.vel.x + ACCELERATION, MAX_X_VELOCITY)
-                self.set_active_animation("walk")
-            else:
-                self.vel.x = max(self.vel.x - ACCELERATION, -MAX_X_VELOCITY)
-                self.set_active_animation("walkR")
-        elif state == STATE_BACKWALK:
-            if self.direction == "right":
-                self.vel.x = max(self.vel.x - ACCELERATION, -MAX_X_VELOCITY)
-                self.set_active_animation("backwalk")
-            else:
-                self.vel.x = min(self.vel.x + ACCELERATION, MAX_X_VELOCITY)
-                self.set_active_animation("backwalkR")
             
-        # self.pos.x += self.vel.x
-    
-    def handle_jump(self, state):
-        if state == STATE_JUMP and self.pos.y == STAGE_FLOOR:
-            if self.direction == "right":
-                self.set_active_animation("jump")
-            else:
-                self.set_active_animation("jumpR")
-            self.vel.y = JUMP_SPEED
-            
-            # self.pos.y += self.vel.y
-    
     def handle_states(self):
         keys = pg.key.get_pressed()
-        current_state = update_state(keys, self.direction, self.playerNum, self.state, self.mode)
+        current_state = update_state(self, keys, self.direction, self.playerNum, self.state, self.mode)
         if current_state == STATE_IDLE:
             self.state = STATE_IDLE
             state_idle(self, self.state)
@@ -128,7 +111,15 @@ class Fighter(AnimatedSprite):
         elif current_state == STATE_JUMP:
             self.state = STATE_JUMP
             state_jump(self, self.state)
-            
+        elif current_state == STATE_FORWARD_STRAFE or current_state == STATE_BACKWARD_STRAFE:
+            self.state = current_state
+            state_jump(self, self.state)
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
+            self.state = current_state
+            state_directional_jump(self, self.state)
+        elif current_state == STATE_CROUCH:
+            self.state = STATE_CROUCH
+            state_crouch(self, self.state)
     def animate(self):
         bottom = self.rect.bottom
         self.image = self.active_anim.get_frame(self.elapsed_time)
@@ -146,6 +137,14 @@ class Fighter(AnimatedSprite):
         # Update the sprite's position
         self.pos += self.vel
 
+        # Check for collision with the left and right edges of the screen
+        if self.pos.x - self.rect.width / 2 < 0:
+            self.pos.x = self.rect.width / 2
+
+        elif self.pos.x + self.rect.width / 2 > WIDTH:
+            self.pos.x = WIDTH - self.rect.width / 2
+
+
         # Check for collision with the stage floor
         if self.pos.y >= STAGE_FLOOR:
             self.pos.y = STAGE_FLOOR
@@ -153,3 +152,4 @@ class Fighter(AnimatedSprite):
           
         # Update the sprite's rect position
         self.rect.midbottom = self.pos
+        
