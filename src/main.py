@@ -3,6 +3,7 @@ from settings import *
 from characters.Ryu import Ryu
 from characters.Ken import Ken
 from stages.KenStage import KenStage
+from HUD.StatusBar import StatusBar
 import time
 
 mode = "local"
@@ -18,14 +19,16 @@ class Game:
         self.player2_sprites = pg.sprite.GroupSingle()
         if(mode == "local"):
             self.player1 = Ryu("local", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
-            self.player2 = Ken("local", "player2",600, STAGE_FLOOR, "left" ,self.player2_sprites)
+            self.player2 = Ken("local", "player2",1080, STAGE_FLOOR, "left" ,self.player2_sprites)
             self.player1.opponent = self.player2
             self.player2.opponent = self.player1
+            self.statusBar = StatusBar(self.player1, self.player2)
         else:
             self.player1 = Ryu("multi", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
-            self.player2 = Ryu("multi", "player2",600, STAGE_FLOOR, "left" ,self.player2_sprites)
+            self.player2 = Ryu("multi", "player2",1080, STAGE_FLOOR, "left" ,self.player2_sprites)
             self.player1.opponent = self.player2
             self.player2.opponent = self.player1
+            self.statusBar = StatusBar(self.player1, self.player2)
 
     def handle_events(self):
         for event in pg.event.get():
@@ -37,6 +40,7 @@ class Game:
         self.background.draw(self.screen)
         self.player1_sprites.draw(self.screen)
         self.player2_sprites.draw(self.screen)
+        self.statusBar.draw(self.screen)
         pg.display.update()
         
     def directionUpdate(self):
@@ -54,6 +58,7 @@ class Game:
             self.player2_sprites.update()
             self.draw()
             self.clock.tick(FPS)
+            self.statusBar.update(1/FPS)
 
 if __name__ == '__main__':
     game = Game()
