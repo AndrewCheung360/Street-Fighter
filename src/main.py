@@ -19,10 +19,13 @@ class Game:
         if(mode == "local"):
             self.player1 = Ryu("local", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
             self.player2 = Ken("local", "player2",600, STAGE_FLOOR, "left" ,self.player2_sprites)
+            self.player1.opponent = self.player2
+            self.player2.opponent = self.player1
         else:
             self.player1 = Ryu("multi", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
             self.player2 = Ryu("multi", "player2",600, STAGE_FLOOR, "left" ,self.player2_sprites)
-        
+            self.player1.opponent = self.player2
+            self.player2.opponent = self.player1
 
     def handle_events(self):
         for event in pg.event.get():

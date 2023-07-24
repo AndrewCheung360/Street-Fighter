@@ -7,7 +7,7 @@ from characters.MoveStates import *
 vec = pg.math.Vector2
 
 class Fighter(AnimatedSprite):
-    def __init__(self, mode, playerNum, name, sheet, bg, x, y, idleFrames, walkFrames, jumpFrames, sideJumpFrames, crouchFrame, direction, *groups):
+    def __init__(self, mode, playerNum, name, sheet, bg, x, y, frame_dict, pushbox_list, direction, *groups):
         super().__init__(*groups)
         
         self.mode = mode
@@ -20,13 +20,17 @@ class Fighter(AnimatedSprite):
         self.bg = bg
         
         #animation frames
-        self.idleFrames = idleFrames
-        self.walkFrames = walkFrames
-        self.jumpFrames = jumpFrames
-        self.sideJumpFrames = sideJumpFrames
-        self.crouchFrame = crouchFrame
+        self.idleFrames = frame_dict["idle"]
+        self.walkFrames = frame_dict["walk"]
+        self.jumpFrames = frame_dict["jump"]
+        self.sideJumpFrames = frame_dict["side_jump"]
+        self.crouchFrame = frame_dict["crouch"]
+        
         #initial state
         self.state = STATE_IDLE
+        
+        #opponent fighter reference
+        self.opponent = None
         
         #load animations during initialization
         self.load()
@@ -35,9 +39,16 @@ class Fighter(AnimatedSprite):
         self.image = self.active_anim.get_frame(0)
         self.rect = self.image.get_rect()
   
+        
+        
         #movement and position
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
+        
+        #collision props
+        self.pushbox_list = pushbox_list
+        self.default_pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
+        self.pushbox = self.default_pushbox
         
     #store animations from spritesheet
     def load(self):
@@ -126,6 +137,20 @@ class Fighter(AnimatedSprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = bottom
 
+    def updatePushboxPosition(self):
+        if self.state == STATE_CROUCH:
+            self.pushbox = pg.Rect((self.pos.x - self.pushbox_list["crouch"]["width"] // 2) + self.pushbox_list["crouch"]["x-offset"], self.pos.y - self.pushbox_list["crouch"]["height"] + self.pushbox_list["crouch"]["y-offset"], self.pushbox_list["crouch"]["width"], self.pushbox_list["crouch"]["height"])
+        else:
+            self.pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
+    
+    def handle_pushbox_collision(self):
+        # Check for pushbox collisions with opponent's pushbox (if available)
+        if self.opponent is not None:
+            if self.pushbox.colliderect(self.opponent.pushbox):
+                if self.direction == "right":
+                    self.pos.x = self.opponent.pushbox.left - self.pushbox.width // 2
+                else:
+                    self.pos.x = self.opponent.pushbox.right + self.pushbox.width // 2
     def update(self):
         super().update(1/FPS)
         self.handle_states()
@@ -153,3 +178,8 @@ class Fighter(AnimatedSprite):
         # Update the sprite's rect position
         self.rect.midbottom = self.pos
         
+        #Update pushbox position
+        self.updatePushboxPosition()
+        
+        #handle pushbox collision
+        self.handle_pushbox_collision()

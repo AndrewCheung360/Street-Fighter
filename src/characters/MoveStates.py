@@ -108,7 +108,8 @@ def state_walk(fighter, state):
         else:
             fighter.vel.x = min(fighter.vel.x + ACCELERATION, MAX_X_VELOCITY)
             fighter.set_active_animation("backwalkR")
-    
+
+     
 def state_jump(fighter, state):
     if state == STATE_JUMP and fighter.pos.y == STAGE_FLOOR:
             if fighter.direction == "right":
@@ -126,8 +127,8 @@ def state_jump(fighter, state):
         if fighter.direction == "right":
             fighter.vel.x = max(fighter.vel.x - AIR_ACCELERATION, -MAX_X_VELOCITY)
         else:
-            fighter.vel.x = min(fighter.vel.x + AIR_ACCELERATION, MAX_X_VELOCITY)
-        
+            fighter.vel.x = min(fighter.vel.x + AIR_ACCELERATION, MAX_X_VELOCITY)    
+
     
 def state_directional_jump(fighter,state):
     if state == STATE_FORWARD_JUMP and fighter.pos.y == STAGE_FLOOR:
@@ -149,6 +150,7 @@ def state_directional_jump(fighter,state):
             fighter.vel.y = JUMP_SPEED
             fighter.vel.x = 8
 
+    
 def state_crouch(fighter, state):
     if state == STATE_CROUCH and fighter.pos.y == STAGE_FLOOR:
             fighter.vel = vec(0, 0)
@@ -156,3 +158,4 @@ def state_crouch(fighter, state):
                 fighter.set_active_animation("crouch")
             else:
                 fighter.set_active_animation("crouchR")
+    
