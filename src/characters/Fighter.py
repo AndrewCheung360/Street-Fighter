@@ -18,6 +18,7 @@ class Fighter(AnimatedSprite):
         #spritesheet
         self.sheet = sheet
         self.bg = bg
+        self.statusPortraitFrame = frame_dict["status_portrait"]
         
         #animation frames
         self.idleFrames = frame_dict["idle"]
@@ -25,6 +26,36 @@ class Fighter(AnimatedSprite):
         self.jumpFrames = frame_dict["jump"]
         self.sideJumpFrames = frame_dict["side_jump"]
         self.crouchFrame = frame_dict["crouch"]
+        self.lightPunchFrames = frame_dict["light_punch"]
+        self.mediumPunchFrames = frame_dict["medium_punch"]
+        self.heavyPunchFrames = frame_dict["heavy_punch"]
+        self.lightKickFrames = frame_dict["light_kick"]
+        self.mediumKickFrames = frame_dict["medium_kick"]
+        self.heavyKickFrames = frame_dict["heavy_kick"]
+        self.closeLightPunchFrames = frame_dict["close_light_punch"]
+        self.closeMediumPunchFrames = frame_dict["close_medium_punch"]
+        self.closeHeavyPunchFrames = frame_dict["close_heavy_punch"]
+        self.closeLightKickFrames = frame_dict["close_light_kick"]
+        self.closeMediumKickFrames = frame_dict["close_medium_kick"]
+        self.closeHeavyKickFrames = frame_dict["close_heavy_kick"]
+        self.crouchLightPunchFrames = frame_dict["crouch_light_punch"]
+        self.crouchMediumPunchFrames = frame_dict["crouch_medium_punch"]
+        self.crouchHeavyPunchFrames = frame_dict["crouch_heavy_punch"]
+        self.crouchLightKickFrames = frame_dict["crouch_light_kick"]
+        self.crouchMediumKickFrames = frame_dict["crouch_medium_kick"]
+        self.crouchHeavyKickFrames = frame_dict["crouch_heavy_kick"]
+        self.jumpLightPunchFrames = frame_dict["jump_light_punch"]
+        self.jumpMediumPunchFrames = frame_dict["jump_medium_punch"]
+        self.jumpHeavyPunchFrames = frame_dict["jump_heavy_punch"]
+        self.jumpLightKickFrames = frame_dict["jump_light_kick"]
+        self.jumpMediumKickFrames = frame_dict["jump_medium_kick"]
+        self.jumpHeavyKickFrames = frame_dict["jump_heavy_kick"]
+        self.diagonalJumpLightPunchFrames = frame_dict["diagonal_jump_light_punch"]
+        self.diagonalJumpMediumPunchFrames = frame_dict["diagonal_jump_medium_punch"]
+        self.diagonalJumpHeavyPunchFrames = frame_dict["diagonal_jump_heavy_punch"]
+        self.diagonalJumpLightKickFrames = frame_dict["diagonal_jump_light_kick"]
+        self.diagonalJumpMediumKickFrames = frame_dict["diagonal_jump_medium_kick"]
+        self.diagonalJumpHeavyKickFrames = frame_dict["diagonal_jump_heavy_kick"]
         
         #initial state
         self.state = STATE_IDLE
@@ -39,8 +70,6 @@ class Fighter(AnimatedSprite):
         self.image = self.active_anim.get_frame(0)
         self.rect = self.image.get_rect()
   
-        
-        
         #movement and position
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
@@ -99,6 +128,186 @@ class Fighter(AnimatedSprite):
         crouch_animationR = spritesheet.get_animation(self.crouchFrame[0], self.crouchFrame[1], Animation.PlayMode.LOOP, 4, True)
         self.store_animation("crouchR", crouch_animationR)
 
+        #light punch animation
+        light_punch_animation = spritesheet.get_animation(self.lightPunchFrames[0], self.lightPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("light_punch", light_punch_animation)
+        light_punch_animationR = spritesheet.get_animation(self.lightPunchFrames[0], self.lightPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("light_punchR", light_punch_animationR)
+
+        #medium punch animation
+        medium_punch_animation = spritesheet.get_animation(self.mediumPunchFrames[0], self.mediumPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("medium_punch", medium_punch_animation)
+        medium_punch_animationR = spritesheet.get_animation(self.mediumPunchFrames[0], self.mediumPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("medium_punchR", medium_punch_animationR)
+        
+        #heavy punch animation
+        heavy_punch_animation = spritesheet.get_animation(self.heavyPunchFrames[0], self.heavyPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("heavy_punch", heavy_punch_animation)
+        heavy_punch_animationR = spritesheet.get_animation(self.heavyPunchFrames[0], self.heavyPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("heavy_punchR", heavy_punch_animationR)
+        
+        #light kick animation
+        light_kick_animation = spritesheet.get_animation(self.lightKickFrames[0], self.lightKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("light_kick", light_kick_animation)
+        light_kick_animationR = spritesheet.get_animation(self.lightKickFrames[0], self.lightKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("light_kickR", light_kick_animationR)
+        
+        #medium kick animation
+        medium_kick_animation = spritesheet.get_animation(self.mediumKickFrames[0], self.mediumKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("medium_kick", medium_kick_animation)
+        medium_kick_animationR = spritesheet.get_animation(self.mediumKickFrames[0], self.mediumKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("medium_kickR", medium_kick_animationR)
+        
+        #heavy kick animation
+        heavy_kick_animation = spritesheet.get_animation(self.heavyKickFrames[0], self.heavyKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("heavy_kick", heavy_kick_animation)
+        heavy_kick_animationR = spritesheet.get_animation(self.heavyKickFrames[0], self.heavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("heavy_kickR", heavy_kick_animationR)
+        
+        #close light punch animation
+        close_light_punch_animation = spritesheet.get_animation(self.closeLightPunchFrames[0], self.closeLightPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_light_punch", close_light_punch_animation)
+        close_light_punch_animationR = spritesheet.get_animation(self.closeLightPunchFrames[0], self.closeLightPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_light_punchR", close_light_punch_animationR)
+        
+        #close medium punch animation
+        close_medium_punch_animation = spritesheet.get_animation(self.closeMediumPunchFrames[0], self.closeMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_medium_punch", close_medium_punch_animation)
+        close_medium_punch_animationR = spritesheet.get_animation(self.closeMediumPunchFrames[0], self.closeMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_medium_punchR", close_medium_punch_animationR)
+        
+        #close heavy punch animation
+        close_heavy_punch_animation = spritesheet.get_animation(self.closeHeavyPunchFrames[0], self.closeHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_heavy_punch", close_heavy_punch_animation)
+        close_heavy_punch_animationR = spritesheet.get_animation(self.closeHeavyPunchFrames[0], self.closeHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_heavy_punchR", close_heavy_punch_animationR)
+        
+        #close light kick animation
+        close_light_kick_animation = spritesheet.get_animation(self.closeLightKickFrames[0], self.closeLightKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_light_kick", close_light_kick_animation)
+        close_light_kick_animationR = spritesheet.get_animation(self.closeLightKickFrames[0], self.closeLightKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_light_kickR", close_light_kick_animationR)
+        
+        #close medium kick animation
+        close_medium_kick_animation = spritesheet.get_animation(self.closeMediumKickFrames[0], self.closeMediumKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_medium_kick", close_medium_kick_animation)
+        close_medium_kick_animationR = spritesheet.get_animation(self.closeMediumKickFrames[0], self.closeMediumKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_medium_kickR", close_medium_kick_animationR)
+        
+        #close heavy kick animation
+        close_heavy_kick_animation = spritesheet.get_animation(self.closeHeavyKickFrames[0], self.closeHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("close_heavy_kick", close_heavy_kick_animation)
+        close_heavy_kick_animationR = spritesheet.get_animation(self.closeHeavyKickFrames[0], self.closeHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("close_heavy_kickR", close_heavy_kick_animationR)
+        
+        #crouch light punch animation
+        crouch_light_punch_animation = spritesheet.get_animation(self.crouchLightPunchFrames[0], self.crouchLightPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_light_punch", crouch_light_punch_animation)
+        crouch_light_punch_animationR = spritesheet.get_animation(self.crouchLightPunchFrames[0], self.crouchLightPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_light_punchR", crouch_light_punch_animationR)
+        
+        #crouch medium punch animation
+        crouch_medium_punch_animation = spritesheet.get_animation(self.crouchMediumPunchFrames[0], self.crouchMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_medium_punch", crouch_medium_punch_animation)
+        crouch_medium_punch_animationR = spritesheet.get_animation(self.crouchMediumPunchFrames[0], self.crouchMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_medium_punchR", crouch_medium_punch_animationR)
+        
+        #crouch heavy punch animation
+        crouch_heavy_punch_animation = spritesheet.get_animation(self.crouchHeavyPunchFrames[0], self.crouchHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_heavy_punch", crouch_heavy_punch_animation)
+        crouch_heavy_punch_animationR = spritesheet.get_animation(self.crouchHeavyPunchFrames[0], self.crouchHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_heavy_punchR", crouch_heavy_punch_animationR)
+        
+        #crouch light kick animation
+        crouch_light_kick_animation = spritesheet.get_animation(self.crouchLightKickFrames[0], self.crouchLightKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_light_kick", crouch_light_kick_animation)
+        crouch_light_kick_animationR = spritesheet.get_animation(self.crouchLightKickFrames[0], self.crouchLightKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_light_kickR", crouch_light_kick_animationR)
+        
+        #crouch medium kick animation
+        crouch_medium_kick_animation = spritesheet.get_animation(self.crouchMediumKickFrames[0], self.crouchMediumKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_medium_kick", crouch_medium_kick_animation)
+        crouch_medium_kick_animationR = spritesheet.get_animation(self.crouchMediumKickFrames[0], self.crouchMediumKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_medium_kickR", crouch_medium_kick_animationR)
+        
+        #crouch heavy kick animation
+        crouch_heavy_kick_animation = spritesheet.get_animation(self.crouchHeavyKickFrames[0], self.crouchHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("crouch_heavy_kick", crouch_heavy_kick_animation)
+        crouch_heavy_kick_animationR = spritesheet.get_animation(self.crouchHeavyKickFrames[0], self.crouchHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("crouch_heavy_kickR", crouch_heavy_kick_animationR)
+        
+        #jump light punch animation
+        jump_light_punch_animation = spritesheet.get_animation(self.jumpLightPunchFrames[0], self.jumpLightPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_light_punch", jump_light_punch_animation)
+        jump_light_punch_animationR = spritesheet.get_animation(self.jumpLightPunchFrames[0], self.jumpLightPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("jump_light_punchR", jump_light_punch_animationR)
+        
+        #jump medium punch animation
+        jump_medium_punch_animation = spritesheet.get_animation(self.jumpMediumPunchFrames[0], self.jumpMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_medium_punch", jump_medium_punch_animation)
+        jump_medium_punch_animationR = spritesheet.get_animation(self.jumpMediumPunchFrames[0], self.jumpMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("jump_medium_punchR", jump_medium_punch_animationR)
+        
+        #jump heavy punch animation
+        jump_heavy_punch_animation = spritesheet.get_animation(self.jumpHeavyPunchFrames[0], self.jumpHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_heavy_punch", jump_heavy_punch_animation)
+        jump_heavy_punch_animationR = spritesheet.get_animation(self.jumpHeavyPunchFrames[0], self.jumpHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("jump_heavy_punchR", jump_heavy_punch_animationR)
+        
+        #jump light kick animation
+        jump_light_kick_animation = spritesheet.get_animation(self.jumpLightKickFrames[0], self.jumpLightKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_light_kick", jump_light_kick_animation)
+        jump_light_kick_animationR = spritesheet.get_animation(self.jumpLightKickFrames[0], self.jumpLightKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("jump_light_kickR", jump_light_kick_animationR)
+        
+        #jump medium kick animation
+        jump_medium_kick_animation = spritesheet.get_animation(self.jumpMediumKickFrames[0], self.jumpMediumKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_medium_kick", jump_medium_kick_animation)
+        jump_medium_kick_animationR = spritesheet.get_animation(self.jumpMediumKickFrames[0], self.jumpMediumKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("jump_medium_kickR", jump_medium_kick_animationR)
+        
+        #jump heavy kick animation
+        jump_heavy_kick_animation = spritesheet.get_animation(self.jumpHeavyKickFrames[0], self.jumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("jump_heavy_kick", jump_heavy_kick_animation)
+        jump_heavy_kick_animationR = spritesheet.get_animation(self.jumpHeavyKickFrames[0], self.jumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)    
+        self.store_animation("jump_heavy_kickR", jump_heavy_kick_animationR)
+        
+        #diagonal jump light punch animation
+        diagonal_jump_light_punch_animation = spritesheet.get_animation(self.diagonalJumpLightPunchFrames[0], self.diagonalJumpLightPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_light_punch", diagonal_jump_light_punch_animation)
+        diagonal_jump_light_punch_animationR = spritesheet.get_animation(self.diagonalJumpLightPunchFrames[0], self.diagonalJumpLightPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("diagonal_jump_light_punchR", diagonal_jump_light_punch_animationR)
+        
+        #diagonal jump medium punch animation
+        diagonal_jump_medium_punch_animation = spritesheet.get_animation(self.diagonalJumpMediumPunchFrames[0], self.diagonalJumpMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_medium_punch", diagonal_jump_medium_punch_animation)
+        diagonal_jump_medium_punch_animationR = spritesheet.get_animation(self.diagonalJumpMediumPunchFrames[0], self.diagonalJumpMediumPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("diagonal_jump_medium_punchR", diagonal_jump_medium_punch_animationR)
+        
+        #diagonal jump heavy punch animation
+        diagonal_jump_heavy_punch_animation = spritesheet.get_animation(self.diagonalJumpHeavyPunchFrames[0], self.diagonalJumpHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_heavy_punch", diagonal_jump_heavy_punch_animation)
+        diagonal_jump_heavy_punch_animationR = spritesheet.get_animation(self.diagonalJumpHeavyPunchFrames[0], self.diagonalJumpHeavyPunchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("diagonal_jump_heavy_punchR", diagonal_jump_heavy_punch_animationR)
+        
+        #diagonal jump light kick animation
+        diagonal_jump_light_kick_animation = spritesheet.get_animation(self.diagonalJumpLightKickFrames[0], self.diagonalJumpLightKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_light_kick", diagonal_jump_light_kick_animation)
+        diagonal_jump_light_kick_animationR = spritesheet.get_animation(self.diagonalJumpLightKickFrames[0], self.diagonalJumpLightKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("diagonal_jump_light_kickR", diagonal_jump_light_kick_animationR)
+        
+        #diagonal jump medium kick animation
+        diagonal_jump_medium_kick_animation = spritesheet.get_animation(self.diagonalJumpMediumKickFrames[0], self.diagonalJumpMediumKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_medium_kick", diagonal_jump_medium_kick_animation)
+        diagonal_jump_medium_kick_animationR = spritesheet.get_animation(self.diagonalJumpMediumKickFrames[0], self.diagonalJumpMediumKickFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("diagonal_jump_medium_kickR", diagonal_jump_medium_kick_animationR)
+        
+        #diagonal jump heavy kick animation
+        diagonal_jump_heavy_kick_animation = spritesheet.get_animation(self.diagonalJumpHeavyKickFrames[0], self.diagonalJumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("diagonal_jump_heavy_kick", diagonal_jump_heavy_kick_animation)
+        diagonal_jump_heavy_kick_animationR = spritesheet.get_animation(self.diagonalJumpHeavyKickFrames[0], self.diagonalJumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)    
+        self.store_animation("diagonal_jump_heavy_kickR", diagonal_jump_heavy_kick_animationR)
+        
     def flipDirection(self):
         if self.direction == "right":
             self.direction = "left"
@@ -116,13 +325,13 @@ class Fighter(AnimatedSprite):
         if current_state == STATE_IDLE:
             self.state = STATE_IDLE
             state_idle(self, self.state)
+        elif "WAIT" in current_state:
+            self.state = current_state
+            state_wait(self, self.state)
         elif current_state == STATE_WALK or current_state == STATE_BACKWALK:
             self.state = current_state
             state_walk(self, self.state)
-        elif current_state == STATE_JUMP:
-            self.state = STATE_JUMP
-            state_jump(self, self.state)
-        elif current_state == STATE_FORWARD_STRAFE or current_state == STATE_BACKWARD_STRAFE:
+        elif current_state == STATE_JUMP or current_state == STATE_FORWARD_STRAFE or current_state == STATE_BACKWARD_STRAFE:
             self.state = current_state
             state_jump(self, self.state)
         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
@@ -131,6 +340,15 @@ class Fighter(AnimatedSprite):
         elif current_state == STATE_CROUCH:
             self.state = STATE_CROUCH
             state_crouch(self, self.state)
+        elif "PUNCH" in current_state:
+            self.state = current_state
+            state_punch(self, self.state)
+        elif "KICK" in current_state:
+            self.state = current_state
+            state_kick(self, self.state)
+        else:
+            pass
+            
     def animate(self):
         bottom = self.rect.bottom
         self.image = self.active_anim.get_frame(self.elapsed_time)
@@ -138,7 +356,7 @@ class Fighter(AnimatedSprite):
         self.rect.bottom = bottom
 
     def updatePushboxPosition(self):
-        if self.state == STATE_CROUCH:
+        if "CROUCH" in self.state:
             self.pushbox = pg.Rect((self.pos.x - self.pushbox_list["crouch"]["width"] // 2) + self.pushbox_list["crouch"]["x-offset"], self.pos.y - self.pushbox_list["crouch"]["height"] + self.pushbox_list["crouch"]["y-offset"], self.pushbox_list["crouch"]["width"], self.pushbox_list["crouch"]["height"])
         else:
             self.pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
@@ -151,6 +369,11 @@ class Fighter(AnimatedSprite):
                     self.pos.x = self.opponent.pushbox.left - self.pushbox.width // 2
                 else:
                     self.pos.x = self.opponent.pushbox.right + self.pushbox.width // 2
+    def is_attacking(self):
+        if "PUNCH" in self.state or "KICK" in self.state:
+            return True
+        return False
+    
     def update(self):
         super().update(1/FPS)
         self.handle_states()
@@ -183,3 +406,6 @@ class Fighter(AnimatedSprite):
         
         #handle pushbox collision
         self.handle_pushbox_collision()
+        
+        # if self.active_name == "forward_jump" or self.active_name == "diagonal_jump_light_punch":
+        #     print(self.pos.y, self.elapsed_time, self.active_name, self.active_anim.get_frame_index(self.elapsed_time), self.state)

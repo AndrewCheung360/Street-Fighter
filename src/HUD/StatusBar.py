@@ -19,6 +19,12 @@ class StatusBar():
         self.fighter1 = fighter1
         self.fighter2 = fighter2
         
+        #player sprite sheets and portraits
+        self.fighter1Sheet = SpriteSheet(fighter1.sheet,"black")
+        self.fighter2Sheet = SpriteSheet(fighter2.sheet,"black")
+        self.fighter1Portrait = self.fighter1Sheet.get_image(fighter1.frame_dict["status_portrait"])
+        self.fighter2Portrait = self.fighter2Sheet.get_image(fighter2.frame_dict["status_portrait"])
+        
         #frame dictionary
         self.frame_dict = {
             "health-bar" : (16,18,145,11),
@@ -133,6 +139,13 @@ class StatusBar():
         self.draw_score(screen, 50000, ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 100)
         #p2 score
         self.draw_score(screen, 1, ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 515)
+     
+    def draw_portraits(self, screen):
+        fighter1PortraitScaled = pg.transform.scale(self.fighter1Portrait, (self.fighter1Portrait.get_width() * 4.5, self.fighter1Portrait.get_height() * 3)) 
+        fighter2PortraitScaled = pg.transform.scale(self.fighter2Portrait, (self.fighter1Portrait.get_width() * 4.5, self.fighter1Portrait.get_height() * 3))
+        screen.blit(fighter1PortraitScaled, (10,110))
+        screen.blit(fighter2PortraitScaled, (1180,110))       
+        
         
     def draw_name_tags(self, screen, fighter1, fighter2):
         fighter1Name = fighter1.name.lower()
@@ -159,6 +172,9 @@ class StatusBar():
         
         #score
         self.draw_scores(screen)
+        
+        #portraits
+        self.draw_portraits(screen)
         
         #name tags
         self.draw_name_tags(screen, self.fighter1, self.fighter2)

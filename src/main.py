@@ -38,8 +38,12 @@ class Game:
 
     def draw(self):
         self.background.draw(self.screen)
-        self.player1_sprites.draw(self.screen)
-        self.player2_sprites.draw(self.screen)
+        if self.player1.is_attacking():
+            self.player2_sprites.draw(self.screen)
+            self.player1_sprites.draw(self.screen)
+        else:
+            self.player1_sprites.draw(self.screen)
+            self.player2_sprites.draw(self.screen)
         self.statusBar.draw(self.screen)
         pg.display.update()
         
