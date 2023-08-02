@@ -7,7 +7,7 @@ from characters.MoveStates import *
 vec = pg.math.Vector2
 
 class Fighter(AnimatedSprite):
-    def __init__(self, mode, playerNum, name, sheet, bg, x, y, frame_dict, pushbox_list, direction, *groups):
+    def __init__(self, mode, playerNum, name, sheet, bg, x, y, frame_dict, pushbox_list, hurtbox_list, direction, *groups):
         super().__init__(*groups)
         
         self.mode = mode
@@ -78,6 +78,14 @@ class Fighter(AnimatedSprite):
         self.pushbox_list = pushbox_list
         self.default_pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
         self.pushbox = self.default_pushbox
+        
+        self.hurtbox_list = hurtbox_list
+        
+        self.hurtboxes = {
+            "head" : pg.Rect(72,0,48,52),
+            "body" : pg.Rect(12,48,108,164),
+            "legs" : pg.Rect(12,212,108,100),
+        }
         
     #store animations from spritesheet
     def load(self):
@@ -362,13 +370,41 @@ class Fighter(AnimatedSprite):
             self.pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
     
     def handle_pushbox_collision(self):
-        # Check for pushbox collisions with opponent's pushbox (if available)
+        # Check for pushbox collisions with opponent's pushbox
         if self.opponent is not None:
             if self.pushbox.colliderect(self.opponent.pushbox):
                 if self.direction == "right":
                     self.pos.x = self.opponent.pushbox.left - self.pushbox.width // 2
                 else:
                     self.pos.x = self.opponent.pushbox.right + self.pushbox.width // 2
+                    
+    def updateHurtboxes(self):
+        if "R" not in self.active_name:
+            name = self.active_name
+        else:
+            name = self.active_name.replace("R","")
+            
+        index = self.active_anim.get_frame_index(self.elapsed_time)
+        
+        if name in self.hurtbox_list.keys():
+            headRect = pg.Rect(0,0,self.hurtbox_list[name][index]["head"][2],self.hurtbox_list[name][index]["head"][3])
+            bodyRect = pg.Rect(0,0,self.hurtbox_list[name][index]["body"][2],self.hurtbox_list[name][index]["body"][3])
+            legsRect = pg.Rect(0,0,self.hurtbox_list[name][index]["legs"][2],self.hurtbox_list[name][index]["legs"][3])
+            
+            if self.direction == "right":
+                headRect.topleft = self.rect.topleft + vec(self.hurtbox_list[name][index]["head"][0],self.hurtbox_list[name][index]["head"][1])
+                bodyRect.topleft = self.rect.topleft + vec(self.hurtbox_list[name][index]["body"][0],self.hurtbox_list[name][index]["body"][1])
+                legsRect.topleft = self.rect.topleft + vec(self.hurtbox_list[name][index]["legs"][0],self.hurtbox_list[name][index]["legs"][1])
+            else:
+                headRect.topright = self.rect.topright - vec(self.hurtbox_list[name][index]["head"][0],0) + vec(0,self.hurtbox_list[name][index]["head"][1])
+                bodyRect.topright = self.rect.topright - vec(self.hurtbox_list[name][index]["body"][0],0) + vec(0,self.hurtbox_list[name][index]["body"][1])
+                legsRect.topright = self.rect.topright - vec(self.hurtbox_list[name][index]["legs"][0],0) + vec(0,self.hurtbox_list[name][index]["legs"][1])
+                
+            self.hurtboxes["head"] = headRect
+            self.hurtboxes["body"] = bodyRect
+            self.hurtboxes["legs"] = legsRect
+        
+
     def is_attacking(self):
         if "PUNCH" in self.state or "KICK" in self.state:
             return True
@@ -406,6 +442,4 @@ class Fighter(AnimatedSprite):
         
         #handle pushbox collision
         self.handle_pushbox_collision()
-        
-        # if self.active_name == "forward_jump" or self.active_name == "diagonal_jump_light_punch":
-        #     print(self.pos.y, self.elapsed_time, self.active_name, self.active_anim.get_frame_index(self.elapsed_time), self.state)
+    

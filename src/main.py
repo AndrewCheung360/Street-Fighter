@@ -6,6 +6,8 @@ from stages.KenStage import KenStage
 from HUD.StatusBar import StatusBar
 import time
 
+vec = pg.math.Vector2
+
 mode = "local"
 
 class Game:
@@ -44,16 +46,29 @@ class Game:
         else:
             self.player1_sprites.draw(self.screen)
             self.player2_sprites.draw(self.screen)
+            
+        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["head"], 2)
+        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["body"], 2)
+        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["legs"], 2)
+        
+        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["head"], 2)
+        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["body"], 2)
+        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["legs"], 2)
         self.statusBar.draw(self.screen)
         pg.display.update()
         
     def directionUpdate(self):
         if self.player1.pos.x > self.player2.pos.x:
-            self.player1.direction = "left"
-            self.player2.direction = "right"
+            if self.player1.pos.y == STAGE_FLOOR:
+                self.player1.direction = "left"
+            if self.player2.pos.y == STAGE_FLOOR:
+                self.player2.direction = "right"
         elif self.player1.pos.x < self.player2.pos.x:
-            self.player1.direction = "right"
-            self.player2.direction = "left"
+            if self.player1.pos.y == STAGE_FLOOR:
+                self.player1.direction = "right"
+            if self.player2.pos.y == STAGE_FLOOR:
+                self.player2.direction = "left"
+        
     def run(self):
         while True:
             self.handle_events()
