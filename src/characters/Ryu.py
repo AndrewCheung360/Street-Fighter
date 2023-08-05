@@ -918,7 +918,169 @@ class Ryu(Fighter):
                 },
                       ],
         }
-        super().__init__(mode, playerNum,self.name,self.sheet,"black",x,y,self.frame_dict,self.pushboxes, self.hurtboxes, direction,*groups)
+        self.hitboxes = {
+            "light_punch": {
+                    1 : (112, 40, 116, 36),
+                    "points" : 100,
+                    "damage" : 4,
+            },
+            "medium_punch": {
+                    2 : (148, 48, 140, 44),
+                    "points" : 300,
+                    "damage" : 22,
+            },
+            "heavy_punch": {
+                    2 : (148, 48, 152, 44),
+                    "points" : 500,
+                    "damage" : 28,
+            },
+            "close_light_punch": {
+                    1 : (128, 12, 92, 48),
+                    "points" : 100,
+                    "damage" : 4,
+            },
+            "close_medium_punch": {
+                    2 : (164, 24, 112, 80),
+                    "points" : 300,
+                    "damage" : 22,
+            },
+            "close_heavy_punch": {
+                    1 : (116,28,152,92),
+                    2 : (100, 4, 180, 132),
+                    "points" : 500,
+                    "damage" : 28,
+            },
+            "light_kick": {
+                    1 : (120, 0, 156, 84),
+                    "points" : 100,
+                    "damage" : 14,
+            },
+            "medium_kick": {
+                    1 : (120, -12, 156, 84),
+                    "points" : 300,
+                    "damage" : 24,
+            },
+            "heavy_kick": {
+                    1 : (132, -20, 96, 96),
+                    2 : (136, -12, 144, 72),
+                    "points" : 500,
+                    "damage" : 30,
+            },
+            "close_light_kick": {
+                    1 : (128, 156, 160, 160),
+                    "points" : 100,
+                    "damage" : 12,
+            },
+            "close_medium_kick": {
+                    2 : (148, 72, 112, 128),
+                    "points" : 300,
+                    "damage" : 24,
+            },
+            "close_heavy_kick": {
+                    2 : (136, 0, 112, 224),
+                    3 : (148,72,168,124),
+                    "points" : 500,
+                    "damage" : 30,
+            },
+            "crouch_light_punch": {
+                    1 : (120, 24, 128, 44),
+                    "points" : 100,
+                    "damage" : 4,
+            },
+            "crouch_medium_punch": {
+                    1 : (124, 20, 140, 64),
+                    "points" : 300,
+                    "damage" : 22,
+            },
+            "crouch_heavy_punch": {
+                    1 : (108, 0, 128, 128),
+                    2 : (116,24,112,204),
+                    "points" : 500,
+                    "damage" : 28,
+            },
+            "crouch_light_kick": {
+                    1 : (112, 132, 172, 88),
+                    "points" : 100,
+                    "damage" : 4,
+            },
+            "crouch_medium_kick": {
+                    1 : (132, 100, 188, 72),
+                    "points" : 300,
+                    "damage" : 22,
+            },
+            "crouch_heavy_kick": {
+                    1 : (112, 116, 200, 80),
+                    "points" : 500,
+                    "damage" : 30,
+            },
+            "jump_light_punch": {
+                    1 : (68, 32, 88, 156),
+                    "points" : 200,
+                    "damage" : 12,
+            },
+            "diagonal_jump_light_punch": {
+                    1 : (68, 32, 88, 156),
+                    "points" : 200,
+                    "damage" : 12,
+            },
+            "diagonal_jump_light_kick": {
+                    1 : (68, 32, 88, 156),
+                    "points" : 200,
+                    "damage" : 12,
+            },
+            "jump_medium_punch": {
+                    1 : (88, 40, 136, 84),
+                    "points" : 400,
+                    "damage" : 22,
+            },
+            "diagonal_jump_medium_punch": {
+                    1 : (88, 40, 136, 84),
+                    "points" : 400,
+                    "damage" : 22,
+            },
+            "jump_heavy_punch": {
+                    1 : (76, 120, 148, 56),
+                    "points" : 600,
+                    "damage" : 28,
+            },
+            "diagonal_jump_heavy_punch": {
+                    1 : (76, 120, 148, 56),
+                    "points" : 600,
+                    "damage" : 28,
+            },
+            "jump_light_kick": {
+                    0 : (20, 8, 164, 132),
+                    "points" : 200,
+                    "damage" : 14,
+            },
+            "jump_medium_kick": {
+                    0 : (20, 8, 188, 132),
+                    "points" : 400,
+                    "damage" : 22,
+            },
+            "jump_heavy_kick": {
+                    0 : (36, 68, 108, 144),
+                    1 : (20,88,216,144),
+                    "points" : 600,
+                    "damage" : 30,
+            },
+            "diagonal_jump_medium_kick": {
+                    1 : (28, 120, 224, 88),
+                    "points" : 400,
+                    "damage" : 22,
+            },
+            "diagonal_jump_heavy_kick": {
+                    1 : (28, 120, 248, 108),
+                    "points" : 600,
+                    "damage" : 30,
+            },
+        }
+        self.boxes = {
+            "pushboxes" : self.pushboxes,
+            "hurtboxes" : self.hurtboxes,
+            "hitboxes" : self.hitboxes,
+        }
+        super().__init__(mode, playerNum,self.name,self.sheet,"black",x,y,self.frame_dict,self.boxes,direction,*groups)
     
     def update(self):
         super().update()
@@ -928,3 +1090,5 @@ class Ryu(Fighter):
             else:
                 self.rect.bottomright = self.pos + vec(self.idleFrames[0][0][2] * 4 // 2,0)
         super().updateHurtboxes()
+        super().updateHitbox()
+        super().attackBoxCollisionDetection()

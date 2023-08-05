@@ -1,14 +1,7 @@
 import pygame as pg
 from settings import *
-from characters.Ryu import Ryu
-from characters.Ken import Ken
-from stages.KenStage import KenStage
-from HUD.StatusBar import StatusBar
-import time
+from scenes.FightScene import FightScene
 
-vec = pg.math.Vector2
-
-mode = "local"
 
 class Game:
     def __init__(self):
@@ -16,68 +9,26 @@ class Game:
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption('Street Fighter')
         self.clock = pg.time.Clock()
-        self.background = KenStage(0, 0)
-        self.player1_sprites = pg.sprite.GroupSingle()
-        self.player2_sprites = pg.sprite.GroupSingle()
-        if(mode == "local"):
-            self.player1 = Ryu("local", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
-            self.player2 = Ken("local", "player2",1080, STAGE_FLOOR, "left" ,self.player2_sprites)
-            self.player1.opponent = self.player2
-            self.player2.opponent = self.player1
-            self.statusBar = StatusBar(self.player1, self.player2)
-        else:
-            self.player1 = Ryu("multi", "player1",200, STAGE_FLOOR, "right",self.player1_sprites)
-            self.player2 = Ryu("multi", "player2",1080, STAGE_FLOOR, "left" ,self.player2_sprites)
-            self.player1.opponent = self.player2
-            self.player2.opponent = self.player1
-            self.statusBar = StatusBar(self.player1, self.player2)
+        self.scene = FightScene(self.screen)
 
     def handle_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
-
-    def draw(self):
-        self.background.draw(self.screen)
-        if self.player1.is_attacking():
-            self.player2_sprites.draw(self.screen)
-            self.player1_sprites.draw(self.screen)
-        else:
-            self.player1_sprites.draw(self.screen)
-            self.player2_sprites.draw(self.screen)
-            
-        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["head"], 2)
-        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["body"], 2)
-        pg.draw.rect(self.screen, "blue", self.player1.hurtboxes["legs"], 2)
         
-        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["head"], 2)
-        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["body"], 2)
-        pg.draw.rect(self.screen, "blue", self.player2.hurtboxes["legs"], 2)
-        self.statusBar.draw(self.screen)
-        pg.display.update()
-        
-    def directionUpdate(self):
-        if self.player1.pos.x > self.player2.pos.x:
-            if self.player1.pos.y == STAGE_FLOOR:
-                self.player1.direction = "left"
-            if self.player2.pos.y == STAGE_FLOOR:
-                self.player2.direction = "right"
-        elif self.player1.pos.x < self.player2.pos.x:
-            if self.player1.pos.y == STAGE_FLOOR:
-                self.player1.direction = "right"
-            if self.player2.pos.y == STAGE_FLOOR:
-                self.player2.direction = "left"
+    def draw_scene(self):
+        self.scene.update()
+        self.scene.draw()
         
     def run(self):
         while True:
             self.handle_events()
-            self.directionUpdate()
-            self.player1_sprites.update()
-            self.player2_sprites.update()
-            self.draw()
             self.clock.tick(FPS)
-            self.statusBar.update(1/FPS)
+            self.draw_scene()
+            
+           
+            
 
 if __name__ == '__main__':
     game = Game()

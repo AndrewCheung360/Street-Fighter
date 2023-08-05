@@ -3,18 +3,19 @@ from settings import *
 from spritesheet import SpriteSheet, Animation
 from animatedsprite import AnimatedSprite
 from characters.MoveStates import *
+from states.gameState import gameState
 
 vec = pg.math.Vector2
 
 class Fighter(AnimatedSprite):
-    def __init__(self, mode, playerNum, name, sheet, bg, x, y, frame_dict, pushbox_list, hurtbox_list, direction, *groups):
+    def __init__(self, mode, playerNum, name, sheet, bg, x, y, frame_dict, boxes, direction, fightScene,*groups):
         super().__init__(*groups)
         
         self.mode = mode
         self.playerNum = playerNum
         self.name = name
         self.direction = direction
-        
+        self.fightScene = fightScene
         #spritesheet
         self.sheet = sheet
         self.bg = bg
@@ -75,17 +76,25 @@ class Fighter(AnimatedSprite):
         self.vel = vec(0, 0)
         
         #collision props
-        self.pushbox_list = pushbox_list
+        self.boxes = boxes
+        
+        self.pushbox_list = self.boxes["pushboxes"]
         self.default_pushbox = pg.Rect((self.pos.x - self.pushbox_list["default"]["width"] // 2) + self.pushbox_list["default"]["x-offset"], self.pos.y - self.pushbox_list["default"]["height"] + self.pushbox_list["default"]["y-offset"], self.pushbox_list["default"]["width"], self.pushbox_list["default"]["height"])
         self.pushbox = self.default_pushbox
         
-        self.hurtbox_list = hurtbox_list
+        self.hurtbox_list = self.boxes["hurtboxes"]
         
         self.hurtboxes = {
-            "head" : pg.Rect(72,0,48,52),
-            "body" : pg.Rect(12,48,108,164),
-            "legs" : pg.Rect(12,212,108,100),
+            "head" : None,
+            "body" : None,
+            "legs" : None,
         }
+        
+        self.hitbox_list = self.boxes["hitboxes"]
+        
+        self.hitbox = None
+        
+        self.attackStruck = False
         
     #store animations from spritesheet
     def load(self):
@@ -316,11 +325,12 @@ class Fighter(AnimatedSprite):
         diagonal_jump_heavy_kick_animationR = spritesheet.get_animation(self.diagonalJumpHeavyKickFrames[0], self.diagonalJumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)    
         self.store_animation("diagonal_jump_heavy_kickR", diagonal_jump_heavy_kick_animationR)
         
-    def flipDirection(self):
-        if self.direction == "right":
+    def directionUpdate(self):
+        if self.pos.x > self.opponent.pos.x:
             self.direction = "left"
         else:
             self.direction = "right"
+
                                 
     def apply_gravity(self):
         if not self.pos.y == STAGE_FLOOR:
@@ -333,6 +343,7 @@ class Fighter(AnimatedSprite):
         if current_state == STATE_IDLE:
             self.state = STATE_IDLE
             state_idle(self, self.state)
+            self.attackStruck = False
         elif "WAIT" in current_state:
             self.state = current_state
             state_wait(self, self.state)
@@ -348,6 +359,7 @@ class Fighter(AnimatedSprite):
         elif current_state == STATE_CROUCH:
             self.state = STATE_CROUCH
             state_crouch(self, self.state)
+            self.attackStruck = False
         elif "PUNCH" in current_state:
             self.state = current_state
             state_punch(self, self.state)
@@ -358,10 +370,8 @@ class Fighter(AnimatedSprite):
             pass
             
     def animate(self):
-        bottom = self.rect.bottom
         self.image = self.active_anim.get_frame(self.elapsed_time)
         self.rect = self.image.get_rect()
-        self.rect.bottom = bottom
 
     def updatePushboxPosition(self):
         if "CROUCH" in self.state:
@@ -404,14 +414,77 @@ class Fighter(AnimatedSprite):
             self.hurtboxes["body"] = bodyRect
             self.hurtboxes["legs"] = legsRect
         
+    def updateHitbox(self):
+        if not self.is_attacking():
+            self.hitbox = None
+            return
+        
+        if "R" not in self.active_name:
+            name = self.active_name
+        else:
+            name = self.active_name.replace("R","")
+        
+        index = self.active_anim.get_frame_index(self.elapsed_time)
+        
+        if name in self.hitbox_list.keys() and index in self.hitbox_list[name]:
+            hitboxRect = pg.Rect(0,0,self.hitbox_list[name][index][2],self.hitbox_list[name][index][3])
+            if self.direction == "right":
+                hitboxRect.topleft = self.rect.topleft + vec(self.hitbox_list[name][index][0],self.hitbox_list[name][index][1])
+            else:
+                hitboxRect.topright = self.rect.topright - vec(self.hitbox_list[name][index][0],0) + vec(0,self.hitbox_list[name][index][1])
+                
+            self.hitbox = hitboxRect
+        else:
+            self.hitbox = None
+            
+    def attackBoxCollisionDetection(self):
+        if not self.is_attacking() or self.hitbox is None or self.hurtboxes["head"] is None or self.hurtboxes["body"] is None or self.hurtboxes["legs"] is None or self.attackStruck:
+            return
 
+        if "R" not in self.active_name:
+            name = self.active_name
+        else:
+            name = self.active_name.replace("R","")
+            
+        if name in self.hitbox_list.keys():
+            points = self.hitbox_list[name]["points"]
+            damage = self.hitbox_list[name]["damage"]
+            if "light" in name:
+                strength = "light"
+            elif "medium" in name:
+                strength = "medium"
+            elif "heavy" in name:
+                strength = "heavy"
+
+        hurtbox_order = ["legs", "head", "body"]
+
+        bodyPart = ""
+        collided_hurtbox = None
+
+        # Loop through the hurtboxes in the specified order
+        for part in hurtbox_order:
+            if self.hitbox.colliderect(self.opponent.hurtboxes[part]):
+                bodyPart = part
+                collided_hurtbox = self.opponent.hurtboxes[part]
+                self.attackStruck = True
+                break
+
+        if collided_hurtbox is not None:
+            gameState[self.playerNum]["score"] += points
+            gameState[self.opponent.playerNum]["health"] -= damage
+            x = (self.hitbox.centerx + collided_hurtbox.centerx) // 2
+            y = (self.hitbox.centery + collided_hurtbox.centery) // 2
+            self.fightScene.handle_hit_splash(x,y,self.playerNum, strength)
+            print(self.name + " hit " + self.opponent.name + "'s " + bodyPart)
+                  
     def is_attacking(self):
         if "PUNCH" in self.state or "KICK" in self.state:
             return True
         return False
-    
+        
     def update(self):
         super().update(1/FPS)
+        self.directionUpdate()
         self.handle_states()
         self.animate()
         

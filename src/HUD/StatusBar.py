@@ -1,7 +1,10 @@
 import pygame as pg
 from settings import *
 from spritesheet import SpriteSheet
+from states.gameState import gameState
+import math
 
+vec = pg.math.Vector2
 class StatusBar():
     def __init__(self, fighter1, fighter2):
         
@@ -14,6 +17,18 @@ class StatusBar():
         #countdown states
         self.time = 99
         self.timerTime = 0
+        
+        #health bars
+        self.healthbars = {
+            "player1" : {
+                "timer" : 0,
+                "hitpoints" : MAX_HEALTH,
+            },
+            "player2": {
+                "timer" : 0,
+                "hitpoints" : MAX_HEALTH,
+            }
+        }
         
         #player 1 and player 2
         self.fighter1 = fighter1
@@ -91,6 +106,10 @@ class StatusBar():
         
         
     def update(self,dt):
+        self.updateTime(dt)
+        self.updateHealth()
+        
+    def updateTime(self, dt):
          # Calculate the elapsed time
         self.timerTime += dt
         
@@ -105,7 +124,11 @@ class StatusBar():
         if self.time < 0:
             self.time = 0
     
-        
+    def updateHealth(self):
+        for player in self.healthbars:
+            if self.healthbars[player]["hitpoints"] > gameState[player]["health"]:
+                self.healthbars[player]["hitpoints"] = max(0, self.healthbars[player]["hitpoints"] - 1)
+    
     def draw_frame(self, screen, frame, x, y, scale = 1, flip=False):
         image = self.sheet.get_image(frame, scale, flip)
         screen.blit(image, (x,y))
@@ -134,11 +157,11 @@ class StatusBar():
         self.draw_score_name(screen,"ANDREW", 400)
         
         #p1 score
-        self.draw_score(screen, 1, 330)
+        self.draw_score(screen, gameState["player1"]["score"], 330)
         #default high score
         self.draw_score(screen, 50000, ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 100)
         #p2 score
-        self.draw_score(screen, 1, ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 515)
+        self.draw_score(screen, gameState["player2"]["score"], ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 515)
      
     def draw_portraits(self, screen):
         fighter1PortraitScaled = pg.transform.scale(self.fighter1Portrait, (self.fighter1Portrait.get_width() * 4.5, self.fighter1Portrait.get_height() * 3)) 
@@ -158,9 +181,16 @@ class StatusBar():
         self.draw_frame(screen, self.frame_dict["tag-" + fighter2Name], fighter2_tag_x, 115, 3.5)
         
     def draw_health_bars(self, screen):
+        #health bars and ko-white
         self.draw_frame(screen, self.frame_dict["health-bar"], ((WIDTH - self.koWhite.get_width()) // 2) - (self.frame_dict["health-bar"][2] * 3.25), 70, 3.25)
         screen.blit(self.koWhite, ((WIDTH - self.koWhite.get_width()) // 2,65))
         self.draw_frame(screen, self.frame_dict["health-bar"], ((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()), 70, 3.25, True)
+        
+        #damage to health bar
+        pg.draw.rect(screen, HEALTH_DAMAGE_COLOR, (((WIDTH - self.koWhite.get_width()) // 2) - (self.frame_dict["health-bar"][2] * 3.25) + 3.25, 73.25, (MAX_HEALTH - math.floor(self.healthbars["player1"]["hitpoints"])) * 3.25, 29.25))
+        p2damageRect = pg.Rect(((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + self.healthbars["player2"]["hitpoints"]*3.25, 73.25, (MAX_HEALTH - math.floor(self.healthbars["player2"]["hitpoints"])) * 3.25, 29.25)
+        p2damageRect.topright = vec(((WIDTH - self.koWhite.get_width()) // 2 + self.koWhite.get_width()) + 468,73.25)
+        pg.draw.rect(screen, HEALTH_DAMAGE_COLOR, p2damageRect)
         
     def draw_countdown(self, screen):
         timeString = str(self.time).zfill(2)
