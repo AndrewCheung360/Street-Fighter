@@ -50,6 +50,16 @@ STATE_DIAGONAL_JUMP_LIGHT_KICK = "DIAGONAL_JUMP_LIGHT_KICK"
 STATE_DIAGONAL_JUMP_MEDIUM_KICK = "DIAGONAL_JUMP_MEDIUM_KICK"
 STATE_DIAGONAL_JUMP_HEAVY_KICK = "DIAGONAL_JUMP_HEAVY_KICK"
 
+STATE_HURT_HEAD_LIGHT = "HURT_HEAD_LIGHT"
+STATE_HURT_HEAD_MEDIUM = "HURT_HEAD_MEDIUM"
+STATE_HURT_HEAD_HEAVY = "HURT_HEAD_HEAVY"
+STATE_HURT_BODY_LIGHT = "HURT_HEAD_LIGHT"
+STATE_HURT_BODY_MEDIUM = "HURT_HEAD_MEDIUM"
+STATE_HURT_BODY_HEAVY = "HURT_HEAD_HEAVY"
+STATE_HURT_CROUCH_LIGHT = "HURT_CROUCH_LIGHT"
+STATE_HURT_CROUCH_MEDIUM = "HURT_CROUCH_MEDIUM"
+STATE_HURT_CROUCH_HEAVY = "HURT_CROUCH_HEAVY"
+
 STATE_WAIT = "WAIT"
 STATE_CROUCH_WAIT = "CROUCH_WAIT"
 
@@ -59,6 +69,8 @@ def update_state(fighter, keys, direction, playerNum, current_state = STATE_IDLE
     if mode == "local":
         if playerNum == "player1":
             # Player 1 key mapping
+            if "HURT" in current_state:
+                return current_state
             if keys[pg.K_g]:
                 if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
                     if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
@@ -239,6 +251,8 @@ def update_state(fighter, keys, direction, playerNum, current_state = STATE_IDLE
             return STATE_IDLE
         elif playerNum == "player2":
             # Player 2 key mapping
+            if "HURT" in current_state:
+                return current_state
             if keys[pg.K_KP4]:
                 if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
                     if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
@@ -516,7 +530,49 @@ def state_crouch(fighter, state):
                 fighter.set_active_animation("crouch")
             else:
                 fighter.set_active_animation("crouchR")
+
+def state_hurt(fighter, state):
+    if "hurt" in fighter.active_name and "crouch" not in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+        if fighter.direction == "right":
+            fighter.set_active_animation("idle")
+        else:
+            fighter.set_active_animation("idleR")
+        fighter.state = STATE_IDLE
+        return
     
+    if "hurt" in fighter.active_name and "crouch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+        if fighter.direction == "right":
+            fighter.set_active_animation("crouch")
+        else:
+            fighter.set_active_animation("crouchR")
+        fighter.state = STATE_CROUCH
+        return
+    
+    if "HURT" in state and fighter.pos.y == STAGE_FLOOR:
+        if "LIGHT" in state:
+            velx = 4
+        elif "MEDIUM" in state:
+            velx = 6
+        elif "HEAVY" in state:
+            velx = 8
+            
+        friction = 0.5
+        
+        if fighter.direction == "right":
+            fighter.vel.x = -velx
+        else:
+            fighter.vel.x = velx
+        
+         # Apply friction to the sliding motion
+        if fighter.vel.x > 0:  # If moving right (positive velocity), apply friction to slow down
+            fighter.vel.x -= friction
+            if fighter.vel.x < 0:  # Clamp the velocity to prevent overshooting
+                fighter.vel.x = 0
+        elif fighter.vel.x < 0:  # If moving left (negative velocity), apply friction to slow down
+            fighter.vel.x += friction
+            if fighter.vel.x > 0:  # Clamp the velocity to prevent overshooting
+                fighter.vel.x = 0
+  
 def state_punch(fighter,state):
     if "punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True and fighter.pos.y == STAGE_FLOOR:
         if "crouch" in fighter.active_name:
@@ -532,6 +588,7 @@ def state_punch(fighter,state):
             else:
                 fighter.set_active_animation("idleR")
         return
+
     if state == STATE_LIGHT_PUNCH and fighter.pos.y == STAGE_FLOOR and "light_punch" not in fighter.active_name:
         fighter.vel = vec(0, 0)
         if fighter.direction == "right":

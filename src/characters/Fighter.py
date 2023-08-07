@@ -4,6 +4,7 @@ from spritesheet import SpriteSheet, Animation
 from animatedsprite import AnimatedSprite
 from characters.MoveStates import *
 from states.gameState import gameState
+import math
 
 vec = pg.math.Vector2
 
@@ -57,6 +58,15 @@ class Fighter(AnimatedSprite):
         self.diagonalJumpLightKickFrames = frame_dict["diagonal_jump_light_kick"]
         self.diagonalJumpMediumKickFrames = frame_dict["diagonal_jump_medium_kick"]
         self.diagonalJumpHeavyKickFrames = frame_dict["diagonal_jump_heavy_kick"]
+        self.lightHurtHeadFrames = frame_dict["light_hurt_head"]
+        self.lightHurtBodyFrames = frame_dict["light_hurt_body"]
+        self.mediumHurtHeadFrames = frame_dict["medium_hurt_head"]
+        self.mediumHurtBodyFrames = frame_dict["medium_hurt_body"]
+        self.heavyHurtHeadFrames = frame_dict["heavy_hurt_head"]
+        self.heavyHurtBodyFrames = frame_dict["heavy_hurt_body"]
+        self.lightHurtCrouchFrames = frame_dict["light_hurt_crouch"]
+        self.mediumHurtCrouchFrames = frame_dict["medium_hurt_crouch"]
+        self.heavyHurtCrouchFrames = frame_dict["heavy_hurt_crouch"]
         
         #initial state
         self.state = STATE_IDLE
@@ -95,6 +105,10 @@ class Fighter(AnimatedSprite):
         self.hitbox = None
         
         self.attackStruck = False
+        
+        self.damageMultiplier = 27/32
+        
+        self.impactFreezeTime = 0
         
     #store animations from spritesheet
     def load(self):
@@ -325,6 +339,60 @@ class Fighter(AnimatedSprite):
         diagonal_jump_heavy_kick_animationR = spritesheet.get_animation(self.diagonalJumpHeavyKickFrames[0], self.diagonalJumpHeavyKickFrames[1], Animation.PlayMode.NORMAL, 4, True)    
         self.store_animation("diagonal_jump_heavy_kickR", diagonal_jump_heavy_kick_animationR)
         
+        #light hurt head animation
+        light_hurt_head_animation = spritesheet.get_animation(self.lightHurtHeadFrames[0], self.lightHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("light_hurt_head", light_hurt_head_animation)
+        light_hurt_head_animationR = spritesheet.get_animation(self.lightHurtHeadFrames[0], self.lightHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("light_hurt_headR", light_hurt_head_animationR)
+        
+        #light hurt body animation
+        light_hurt_body_animation = spritesheet.get_animation(self.lightHurtBodyFrames[0], self.lightHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("light_hurt_body", light_hurt_body_animation)
+        light_hurt_body_animationR = spritesheet.get_animation(self.lightHurtBodyFrames[0], self.lightHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("light_hurt_bodyR", light_hurt_body_animationR)
+        
+        #medium hurt head animation
+        medium_hurt_head_animation = spritesheet.get_animation(self.mediumHurtHeadFrames[0], self.mediumHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("medium_hurt_head", medium_hurt_head_animation)
+        medium_hurt_head_animationR = spritesheet.get_animation(self.mediumHurtHeadFrames[0], self.mediumHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("medium_hurt_headR", medium_hurt_head_animationR)
+        
+        #medium hurt body animation
+        medium_hurt_body_animation = spritesheet.get_animation(self.mediumHurtBodyFrames[0], self.mediumHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("medium_hurt_body", medium_hurt_body_animation)
+        medium_hurt_body_animationR = spritesheet.get_animation(self.mediumHurtBodyFrames[0], self.mediumHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("medium_hurt_bodyR", medium_hurt_body_animationR)
+        
+        #heavy hurt head animation
+        heavy_hurt_head_animation = spritesheet.get_animation(self.heavyHurtHeadFrames[0], self.heavyHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("heavy_hurt_head", heavy_hurt_head_animation)
+        heavy_hurt_head_animationR = spritesheet.get_animation(self.heavyHurtHeadFrames[0], self.heavyHurtHeadFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("heavy_hurt_headR", heavy_hurt_head_animationR)
+        
+        #heavy hurt body animation
+        heavy_hurt_body_animation = spritesheet.get_animation(self.heavyHurtBodyFrames[0], self.heavyHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("heavy_hurt_body", heavy_hurt_body_animation)
+        heavy_hurt_body_animationR = spritesheet.get_animation(self.heavyHurtBodyFrames[0], self.heavyHurtBodyFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("heavy_hurt_bodyR", heavy_hurt_body_animationR)
+        
+        #light hurt crouch animation
+        light_hurt_crouch_animation = spritesheet.get_animation(self.lightHurtCrouchFrames[0], self.lightHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("light_hurt_crouch", light_hurt_crouch_animation)
+        light_hurt_crouch_animationR = spritesheet.get_animation(self.lightHurtCrouchFrames[0], self.lightHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("light_hurt_crouchR", light_hurt_crouch_animationR)
+        
+        #medium hurt crouch animation
+        medium_hurt_crouch_animation = spritesheet.get_animation(self.mediumHurtCrouchFrames[0], self.mediumHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("medium_hurt_crouch", medium_hurt_crouch_animation)
+        medium_hurt_crouch_animationR = spritesheet.get_animation(self.mediumHurtCrouchFrames[0], self.mediumHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("medium_hurt_crouchR", medium_hurt_crouch_animationR)
+        
+        #heavy hurt crouch animation
+        heavy_hurt_crouch_animation = spritesheet.get_animation(self.heavyHurtCrouchFrames[0], self.heavyHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4)
+        self.store_animation("heavy_hurt_crouch", heavy_hurt_crouch_animation)
+        heavy_hurt_crouch_animationR = spritesheet.get_animation(self.heavyHurtCrouchFrames[0], self.heavyHurtCrouchFrames[1], Animation.PlayMode.NORMAL, 4, True)
+        self.store_animation("heavy_hurt_crouchR", heavy_hurt_crouch_animationR)
+        
     def directionUpdate(self):
         if self.pos.x > self.opponent.pos.x:
             self.direction = "left"
@@ -349,6 +417,7 @@ class Fighter(AnimatedSprite):
             state_wait(self, self.state)
         elif current_state == STATE_WALK or current_state == STATE_BACKWALK:
             self.state = current_state
+            self.attackStruck = False
             state_walk(self, self.state)
         elif current_state == STATE_JUMP or current_state == STATE_FORWARD_STRAFE or current_state == STATE_BACKWARD_STRAFE:
             self.state = current_state
@@ -360,6 +429,9 @@ class Fighter(AnimatedSprite):
             self.state = STATE_CROUCH
             state_crouch(self, self.state)
             self.attackStruck = False
+        elif "HURT" in current_state:
+            self.state = current_state
+            state_hurt(self, self.state)
         elif "PUNCH" in current_state:
             self.state = current_state
             state_punch(self, self.state)
@@ -467,16 +539,38 @@ class Fighter(AnimatedSprite):
                 bodyPart = part
                 collided_hurtbox = self.opponent.hurtboxes[part]
                 self.attackStruck = True
+                self.impactFreezeTime += 1/FPS
                 break
 
         if collided_hurtbox is not None:
             gameState[self.playerNum]["score"] += points
-            gameState[self.opponent.playerNum]["health"] -= damage
+            gameState[self.opponent.playerNum]["health"] -= math.floor(damage * self.damageMultiplier)
             x = (self.hitbox.centerx + collided_hurtbox.centerx) // 2
             y = (self.hitbox.centery + collided_hurtbox.centery) // 2
             self.fightScene.handle_hit_splash(x,y,self.playerNum, strength)
+            self.opponent.handleAttackHit(strength, bodyPart)
             print(self.name + " hit " + self.opponent.name + "'s " + bodyPart)
-                  
+            
+    def handleAttackHit(self, strength, bodyPart):
+        if "crouch" in self.active_name:
+            part = "crouch"
+            self.state = "HURT_" + strength.upper() + "_" + part.upper()
+            if self.direction == "right":
+                self.set_active_animation(strength + "_hurt_" + part)
+            else:
+                self.set_active_animation(strength + "_hurt_" + part + "R")
+        elif "jump" in self.active_name:
+            pass
+        else:
+            part = bodyPart
+            if bodyPart == "legs":
+                part = "body"
+            self.state = "HURT_" + strength.upper() + "_" + part.upper()
+            if self.direction == "right":
+                self.set_active_animation(strength + "_hurt_" + part)
+            else:
+                self.set_active_animation(strength + "_hurt_" + part + "R")
+    
     def is_attacking(self):
         if "PUNCH" in self.state or "KICK" in self.state:
             return True
@@ -485,7 +579,14 @@ class Fighter(AnimatedSprite):
     def update(self):
         super().update(1/FPS)
         self.directionUpdate()
-        self.handle_states()
+        if self.impactFreezeTime == 0:
+            self.handle_states()
+        else:
+            if self.impactFreezeTime >= 15/FPS:
+                self.impactFreezeTime = 0
+                self.handle_states()
+            else:
+                self.impactFreezeTime += 1/FPS
         self.animate()
         
         # apply gravity

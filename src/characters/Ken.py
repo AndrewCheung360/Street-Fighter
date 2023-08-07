@@ -44,6 +44,19 @@ class Ken(Fighter):
         
         self.diagonalJumpMediumKickFrames = ([(463, 551, 37, 63),(505, 554, 63, 54),(572, 551, 37, 63),(656,9,33,90)],[0.0667,0.2,0.1,0.0667])
         self.diagonalJumpHeavyKickFrames = ([(463, 551, 37, 63),(505, 554, 63, 54),(572, 551, 37, 63),(656,9,33,90)],[0.1,0.2,0.1,0.0667])
+        
+        
+        self.lightHurtHeadFrames = ([(217, 781, 48, 79), (271,781,52,79)],[0.3,0.133])
+        self.mediumHurtHeadFrames = ([(217, 781, 48, 79), (271,781,52,79), (328,777,58,83)],[0.3,0.0667,0.15])
+        self.heavyHurtHeadFrames = ([(271,781,52,79), (328,777,58,83), (391,778,43,82)],[0.367,0.0667,0.15])
+        self.lightHurtBodyFrames = ([(5, 784, 43, 76)],[0.433])
+        self.mediumHurtBodyFrames = ([(5, 784, 43, 76), (53,785,47,75)],[0.367,0.15])
+        self.heavyHurtBodyFrames = ([(5, 784, 43, 76), (53,785,47,75),(106, 795, 49, 65),  (391,778,43,82)],[0.3,0.0667,0.0667,0.15])
+        
+        self.lightHurtCrouchFrames = ([(451, 798, 45, 62)],[0.433])
+        self.mediumHurtCrouchFrames = ([(451, 798, 45, 62)],[0.517])
+        self.heavyHurtCrouchFrames = ([(451, 798, 45, 62)],[0.583])
+        
         self.frame_dict = {
                            "status_portrait" : self.statusPortraitFrame,
                            "idle": self.idleFrames,
@@ -81,6 +94,15 @@ class Ken(Fighter):
                            "diagonal_jump_light_kick": self.diagonalJumpLightKickFrames,
                            "diagonal_jump_medium_kick": self.diagonalJumpMediumKickFrames,
                            "diagonal_jump_heavy_kick": self.diagonalJumpHeavyKickFrames,
+                           "light_hurt_head": self.lightHurtHeadFrames,
+                           "medium_hurt_head": self.mediumHurtHeadFrames,
+                           "heavy_hurt_head": self.heavyHurtHeadFrames,
+                           "light_hurt_body": self.lightHurtBodyFrames,
+                            "medium_hurt_body": self.mediumHurtBodyFrames,
+                            "heavy_hurt_body": self.heavyHurtBodyFrames,
+                            "light_hurt_crouch": self.lightHurtCrouchFrames,
+                            "medium_hurt_crouch": self.mediumHurtCrouchFrames,
+                            "heavy_hurt_crouch": self.heavyHurtCrouchFrames,
                            }
         self.pushboxes = {
                             "default" :{
@@ -914,6 +936,114 @@ class Ken(Fighter):
                     "head" : (48,8,48,52),
                     "body" : (0,56,112,164),
                     "legs" : (0,56,112,164),
+                },
+                      ],
+                "light_hurt_head" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "medium_hurt_head" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "heavy_hurt_head" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "light_hurt_body" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "medium_hurt_body" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "heavy_hurt_body" : [
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                {
+                    "head" : (72,0,48,52),
+                    "body" : (12,48,108,164),
+                    "legs" : (12,212,108,100),
+                },
+                      ],
+             "light_hurt_crouch" : [
+                {
+                    "head" : (96,0,48,52),
+                    "body" : (48,48,96,164),
+                    "legs" : (48,48,96,164),
+                },
+                      ],
+             "medium_hurt_crouch" : [
+                {
+                    "head" : (96,0,48,52),
+                    "body" : (48,48,96,164),
+                    "legs" : (48,48,96,164),
+                },
+                      ],
+             "heavy_hurt_crouch" : [
+                {
+                    "head" : (96,0,48,52),
+                    "body" : (48,48,96,164),
+                    "legs" : (48,48,96,164),
                 },
                       ],
             
