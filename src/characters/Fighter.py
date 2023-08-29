@@ -549,7 +549,6 @@ class Fighter(AnimatedSprite):
             y = (self.hitbox.centery + collided_hurtbox.centery) // 2
             self.fightScene.handle_hit_splash(x,y,self.playerNum, strength)
             self.opponent.handleAttackHit(strength, bodyPart)
-            print(self.name + " hit " + self.opponent.name + "'s " + bodyPart)
             
     def handleAttackHit(self, strength, bodyPart):
         if "crouch" in self.active_name:

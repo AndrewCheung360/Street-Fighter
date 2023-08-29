@@ -1222,4 +1222,3 @@ class Ryu(Fighter):
         super().updateHurtboxes()
         super().updateHitbox()
         super().attackBoxCollisionDetection()
-        print(self.state)
