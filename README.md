@@ -19,18 +19,15 @@ This Python project uses the pygame library to recreate the basic features of th
 ### Usage
 
 - Go to main.py and run the program to launch the game
-- To switch from local to multiplayer, go to FightScene.py under the scenes folder and change the value from "local" to "multiplayer"
+- There are 3 modes: localLaptop, localKeyboard, and multiplayer. To switch modes, go to FightScene.py under the scenes folder and change the value of mode to the respective mode to be run.
 - Check here for the input keys \_\_\_\_ or go to MoveStates.py under the characters folder to find or modify the keyboard inputs.
-
-### Demo
-
-- Below is a demo for how this project works:
 
 ## Upcoming Features and Fixes (Work in Progress)
 
 This project is still ongoing. Here are some known issues and upcoming features that will be fixed or implemented in the near future:
 
 - Multiplayer mode on the same network
+- Sizing and Positions for different screen sizes
 - Special Moves
 - Throws
 - More Characters

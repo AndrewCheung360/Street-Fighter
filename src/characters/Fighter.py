@@ -110,7 +110,7 @@ class Fighter(AnimatedSprite):
         
         self.impactFreezeTime = 0
         
-    #store animations from spritesheet
+    #store animations from spritesheet (Change the scaling value here to reflect laptop size)
     def load(self):
         spritesheet = SpriteSheet(self.sheet, self.bg)
         

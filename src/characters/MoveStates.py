@@ -65,373 +65,422 @@ STATE_CROUCH_WAIT = "CROUCH_WAIT"
 
 vec = pg.math.Vector2
 
-def update_state(fighter, keys, direction, playerNum, current_state = STATE_IDLE, mode="local"):
-    if mode == "local":
+    # elif playerNum == "player2":
+    #     # Player 2 key mapping
+    #     if "HURT" in current_state:
+    #         return current_state
+    #     if keys[pg.K_KP4]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
+    #             if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+    #                 return STATE_CLOSE_LIGHT_PUNCH
+    #             return STATE_LIGHT_PUNCH
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_PUNCH:
+    #             if "crouch_light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_LIGHT_PUNCH
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_PUNCH:
+    #             return STATE_JUMP_LIGHT_PUNCH
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_PUNCH:
+    #             return STATE_DIAGONAL_JUMP_LIGHT_PUNCH
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_KP5]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_PUNCH or current_state == STATE_CLOSE_MEDIUM_PUNCH:
+    #             if "medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+    #                 return STATE_CLOSE_MEDIUM_PUNCH
+    #             return STATE_MEDIUM_PUNCH
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_PUNCH:
+    #             if "crouch_medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_MEDIUM_PUNCH
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_PUNCH:
+    #             return STATE_JUMP_MEDIUM_PUNCH
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_PUNCH:
+    #             return STATE_DIAGONAL_JUMP_MEDIUM_PUNCH
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT  
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_KP6]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_PUNCH or current_state == STATE_CLOSE_HEAVY_PUNCH:
+    #             if "heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+    #                 return STATE_CLOSE_HEAVY_PUNCH
+    #             return STATE_HEAVY_PUNCH
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_PUNCH:
+    #             if "crouch_heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_HEAVY_PUNCH
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_PUNCH:
+    #             return STATE_JUMP_HEAVY_PUNCH
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_PUNCH:
+    #             return STATE_DIAGONAL_JUMP_HEAVY_PUNCH
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_KP7]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_KICK or current_state == STATE_CLOSE_LIGHT_KICK:
+    #             if "light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+    #                 return STATE_CLOSE_LIGHT_KICK
+    #             return STATE_LIGHT_KICK
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_KICK:
+    #             if "crouch_light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_LIGHT_KICK
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_KICK:
+    #             return STATE_JUMP_LIGHT_KICK
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_KICK:
+    #             return STATE_DIAGONAL_JUMP_LIGHT_KICK
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_KP8]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_KICK or current_state == STATE_CLOSE_MEDIUM_KICK:
+    #             if "medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+    #                 return STATE_CLOSE_MEDIUM_KICK
+    #             return STATE_MEDIUM_KICK
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_KICK:
+    #             if "crouch_medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_MEDIUM_KICK
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_KICK:
+    #             return STATE_JUMP_MEDIUM_KICK
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_KICK:
+    #             return STATE_DIAGONAL_JUMP_MEDIUM_KICK
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT  
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_KP9]:
+    #         if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_KICK or current_state == STATE_CLOSE_HEAVY_KICK:
+    #             if "heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_WAIT
+    #             if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+    #                 return STATE_CLOSE_HEAVY_KICK
+    #             return STATE_HEAVY_KICK
+    #         elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_KICK:
+    #             if "crouch_heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+    #                 return STATE_CROUCH_WAIT
+    #             return STATE_CROUCH_HEAVY_KICK
+    #         elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_KICK:
+    #             return STATE_JUMP_HEAVY_KICK
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_KICK:
+    #             return STATE_DIAGONAL_JUMP_HEAVY_KICK
+    #         elif current_state == STATE_WAIT:
+    #             return STATE_WAIT
+    #         elif current_state == STATE_CROUCH_WAIT:
+    #             return STATE_CROUCH_WAIT
+    #         else:
+    #             return current_state
+    #     elif keys[pg.K_LEFT]:
+    #         if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #             return current_state
+    #         if direction == "left":
+    #             if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #                 return STATE_FORWARD_STRAFE
+    #             elif keys[pg.K_KP0]:
+    #                 return STATE_FORWARD_JUMP
+    #             elif current_state == STATE_FORWARD_JUMP:
+    #                 return current_state
+    #             return STATE_WALK
+    #         else:
+    #             if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #                 return STATE_BACKWARD_STRAFE
+    #             elif keys[pg.K_KP0]:
+    #                 return STATE_BACKWARD_JUMP
+    #             elif current_state == STATE_BACKWARD_JUMP:
+    #                 return current_state
+    #             return STATE_BACKWALK
+    #     elif keys[pg.K_RIGHT]:
+    #         if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #             return current_state
+    #         if direction == "left":
+    #             if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #                 return STATE_BACKWARD_STRAFE
+    #             elif keys[pg.K_KP0]:
+    #                 return STATE_BACKWARD_JUMP
+    #             elif current_state == STATE_BACKWARD_JUMP:
+    #                 return current_state
+    #             return STATE_BACKWALK
+    #         else:
+    #             if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #                 return STATE_FORWARD_STRAFE
+    #             elif keys[pg.K_KP0]:
+    #                 return STATE_FORWARD_JUMP
+    #             elif current_state == STATE_FORWARD_JUMP:
+    #                 return current_state
+    #             return STATE_WALK
+    #     elif keys[pg.K_DOWN]:
+    #         if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #             return current_state
+    #         return STATE_CROUCH
+    #     elif keys[pg.K_KP0]:
+    #         if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+    #             return current_state
+    #         elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
+    #             return current_state
+    #         return STATE_JUMP
+    #     elif "WALK" not in current_state and current_state is not STATE_CROUCH and STATE_WAIT not in current_state:
+    #         return current_state
+    #     return STATE_IDLE
+
+
+
+def update_state(fighter, keys, direction, playerNum, current_state = STATE_IDLE, mode="localLaptop"):
+    right = keys[pg.K_d]
+    left = keys[pg.K_a]
+    down = keys[pg.K_s]
+    jump = keys[pg.K_SPACE]
+    lightPunch = keys[pg.K_h]
+    mediumPunch = keys[pg.K_j]
+    heavyPunch = keys[pg.K_k]
+    lightKick = keys[pg.K_y]
+    mediumKick = keys[pg.K_u]
+    heavyKick = keys[pg.K_i]
+    if "local" in mode:
         if playerNum == "player1":
-            # Player 1 key mapping
-            if "HURT" in current_state:
+            if "Laptop" in mode:
+                lightPunch = keys[pg.K_f]
+                mediumPunch = keys[pg.K_g]
+                heavyPunch = keys[pg.K_h]
+                lightKick = keys[pg.K_r]
+                mediumKick = keys[pg.K_t]
+                heavyKick = keys[pg.K_y]
+            else:
+                lightPunch = keys[pg.K_g]
+                mediumPunch = keys[pg.K_h]
+                heavyPunch = keys[pg.K_j]
+                lightKick = keys[pg.K_t]
+                mediumKick = keys[pg.K_y]
+                heavyKick = keys[pg.K_u]
+        else:
+            if "Laptop" in mode:
+                right = keys[pg.K_RIGHT]
+                left = keys[pg.K_LEFT]
+                down = keys[pg.K_DOWN]
+                jump = keys[pg.K_RCTRL]
+                lightPunch = keys[pg.K_l]
+                mediumPunch = keys[pg.K_k]
+                heavyPunch = keys[pg.K_j]
+                lightKick = keys[pg.K_o]
+                mediumKick = keys[pg.K_i]
+                heavyKick = keys[pg.K_u]
+            else:
+                right = keys[pg.K_RIGHT]
+                left = keys[pg.K_LEFT]
+                down = keys[pg.K_DOWN]
+                jump = keys[pg.K_KP0]
+                lightPunch = keys[pg.K_KP4]
+                mediumPunch = keys[pg.K_KP5]
+                heavyPunch = keys[pg.K_KP6]
+                lightKick = keys[pg.K_KP7]
+                mediumKick = keys[pg.K_KP8]
+                heavyKick = keys[pg.K_KP9]
+    if "HURT" in current_state:
+        return current_state
+    if lightPunch:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
+            if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+                return STATE_CLOSE_LIGHT_PUNCH
+            return STATE_LIGHT_PUNCH
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_PUNCH:
+            if "crouch_light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_LIGHT_PUNCH
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_PUNCH:
+            return STATE_JUMP_LIGHT_PUNCH
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_PUNCH:
+            return STATE_DIAGONAL_JUMP_LIGHT_PUNCH
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT
+        else:
+            return current_state
+    elif mediumPunch:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_PUNCH or current_state == STATE_CLOSE_MEDIUM_PUNCH:
+            if "medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+                return STATE_CLOSE_MEDIUM_PUNCH
+            return STATE_MEDIUM_PUNCH
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_PUNCH:
+            if "crouch_medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_MEDIUM_PUNCH
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_PUNCH:
+            return STATE_JUMP_MEDIUM_PUNCH
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_PUNCH:
+            return STATE_DIAGONAL_JUMP_MEDIUM_PUNCH
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT  
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT
+        else:
+            return current_state
+    elif heavyPunch:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_PUNCH or current_state == STATE_CLOSE_HEAVY_PUNCH:
+            if "heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
+                return STATE_CLOSE_HEAVY_PUNCH
+            return STATE_HEAVY_PUNCH
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_PUNCH:
+            if "crouch_heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_HEAVY_PUNCH
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_PUNCH:
+            return STATE_JUMP_HEAVY_PUNCH
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_PUNCH:
+            return STATE_DIAGONAL_JUMP_HEAVY_PUNCH
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT
+        else:
+            return current_state
+    elif lightKick:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_KICK or current_state == STATE_CLOSE_LIGHT_KICK:
+            if "light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+                return STATE_CLOSE_LIGHT_KICK
+            return STATE_LIGHT_KICK
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_KICK:
+            if "crouch_light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_LIGHT_KICK
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_KICK:
+            return STATE_JUMP_LIGHT_KICK
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_KICK:
+            return STATE_DIAGONAL_JUMP_LIGHT_KICK
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT
+        else:
+            return current_state
+    elif mediumKick:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_KICK or current_state == STATE_CLOSE_MEDIUM_KICK:
+            if "medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+                return STATE_CLOSE_MEDIUM_KICK
+            return STATE_MEDIUM_KICK
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_KICK:
+            if "crouch_medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_MEDIUM_KICK
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_KICK:
+            return STATE_JUMP_MEDIUM_KICK
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_KICK:
+            return STATE_DIAGONAL_JUMP_MEDIUM_KICK
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT  
+        else:
+            return current_state
+    elif heavyKick:
+        if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_KICK or current_state == STATE_CLOSE_HEAVY_KICK:
+            if "heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_WAIT
+            if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
+                return STATE_CLOSE_HEAVY_KICK
+            return STATE_HEAVY_KICK
+        elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_KICK:
+            if "crouch_heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
+                return STATE_CROUCH_WAIT
+            return STATE_CROUCH_HEAVY_KICK
+        elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_KICK:
+            return STATE_JUMP_HEAVY_KICK
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_KICK:
+            return STATE_DIAGONAL_JUMP_HEAVY_KICK
+        elif current_state == STATE_WAIT:
+            return STATE_WAIT
+        elif current_state == STATE_CROUCH_WAIT:
+            return STATE_CROUCH_WAIT
+        else:
+            return current_state
+    elif right:
+        if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+            return current_state
+        if direction == "right":
+            if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+                return STATE_FORWARD_STRAFE
+            elif jump:
+                return STATE_FORWARD_JUMP
+            elif current_state == STATE_FORWARD_JUMP:
                 return current_state
-            if keys[pg.K_g]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
-                    if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_LIGHT_PUNCH
-                    return STATE_LIGHT_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_PUNCH:
-                    if "crouch_light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_LIGHT_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_PUNCH:
-                    return STATE_JUMP_LIGHT_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_PUNCH:
-                    return STATE_DIAGONAL_JUMP_LIGHT_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_h]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_PUNCH or current_state == STATE_CLOSE_MEDIUM_PUNCH:
-                    if "medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_MEDIUM_PUNCH
-                    return STATE_MEDIUM_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_PUNCH:
-                    if "crouch_medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_MEDIUM_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_PUNCH:
-                    return STATE_JUMP_MEDIUM_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_PUNCH:
-                    return STATE_DIAGONAL_JUMP_MEDIUM_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT  
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_j]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_PUNCH or current_state == STATE_CLOSE_HEAVY_PUNCH:
-                    if "heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_HEAVY_PUNCH
-                    return STATE_HEAVY_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_PUNCH:
-                    if "crouch_heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_HEAVY_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_PUNCH:
-                    return STATE_JUMP_HEAVY_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_PUNCH:
-                    return STATE_DIAGONAL_JUMP_HEAVY_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_t]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_KICK or current_state == STATE_CLOSE_LIGHT_KICK:
-                    if "light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_LIGHT_KICK
-                    return STATE_LIGHT_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_KICK:
-                    if "crouch_light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_LIGHT_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_KICK:
-                    return STATE_JUMP_LIGHT_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_KICK:
-                    return STATE_DIAGONAL_JUMP_LIGHT_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_y]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_KICK or current_state == STATE_CLOSE_MEDIUM_KICK:
-                    if "medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_MEDIUM_KICK
-                    return STATE_MEDIUM_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_KICK:
-                    if "crouch_medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_MEDIUM_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_KICK:
-                    return STATE_JUMP_MEDIUM_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_KICK:
-                    return STATE_DIAGONAL_JUMP_MEDIUM_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT  
-                else:
-                    return current_state
-            elif keys[pg.K_u]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_KICK or current_state == STATE_CLOSE_HEAVY_KICK:
-                    if "heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_HEAVY_KICK
-                    return STATE_HEAVY_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_KICK:
-                    if "crouch_heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_HEAVY_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_KICK:
-                    return STATE_JUMP_HEAVY_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_KICK:
-                    return STATE_DIAGONAL_JUMP_HEAVY_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_d]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                if direction == "right":
-                    if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_FORWARD_STRAFE
-                    elif keys[pg.K_SPACE]:
-                        return STATE_FORWARD_JUMP
-                    elif current_state == STATE_FORWARD_JUMP:
-                        return current_state
-                    return STATE_WALK
-                else:
-                    if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_BACKWARD_STRAFE
-                    elif keys[pg.K_SPACE]:
-                        return STATE_BACKWARD_JUMP
-                    elif current_state == STATE_BACKWARD_JUMP:
-                        return current_state
-                    return STATE_BACKWALK
-            elif keys[pg.K_a]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                if direction == "right":
-                    if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_BACKWARD_STRAFE
-                    elif keys[pg.K_SPACE]:
-                        return STATE_BACKWARD_JUMP
-                    elif current_state == STATE_BACKWARD_JUMP:
-                        return current_state
-                    return STATE_BACKWALK
-                else:
-                    if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_FORWARD_STRAFE
-                    elif keys[pg.K_SPACE]:
-                        return STATE_FORWARD_JUMP
-                    elif current_state == STATE_FORWARD_JUMP:
-                        return current_state
-                    return STATE_WALK
-            elif keys[pg.K_s]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                return STATE_CROUCH
-            elif keys[pg.K_SPACE]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
-                    return current_state
-                return STATE_JUMP
-            
-            elif "WALK" not in current_state and current_state is not STATE_CROUCH and STATE_WAIT not in current_state:
+            return STATE_WALK
+        else:
+            if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+                return STATE_BACKWARD_STRAFE
+            elif jump:
+                return STATE_BACKWARD_JUMP
+            elif current_state == STATE_BACKWARD_JUMP:
                 return current_state
-            return STATE_IDLE
-        elif playerNum == "player2":
-            # Player 2 key mapping
-            if "HURT" in current_state:
+            return STATE_BACKWALK
+    elif left:
+        if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+            return current_state
+        if direction == "right":
+            if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+                return STATE_BACKWARD_STRAFE
+            elif jump:
+                return STATE_BACKWARD_JUMP
+            elif current_state == STATE_BACKWARD_JUMP:
                 return current_state
-            if keys[pg.K_KP4]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_PUNCH or current_state == STATE_CLOSE_LIGHT_PUNCH:
-                    if "light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_LIGHT_PUNCH
-                    return STATE_LIGHT_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_PUNCH:
-                    if "crouch_light_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_LIGHT_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_PUNCH:
-                    return STATE_JUMP_LIGHT_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_PUNCH:
-                    return STATE_DIAGONAL_JUMP_LIGHT_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_KP5]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_PUNCH or current_state == STATE_CLOSE_MEDIUM_PUNCH:
-                    if "medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_MEDIUM_PUNCH
-                    return STATE_MEDIUM_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_PUNCH:
-                    if "crouch_medium_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_MEDIUM_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_PUNCH:
-                    return STATE_JUMP_MEDIUM_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_PUNCH:
-                    return STATE_DIAGONAL_JUMP_MEDIUM_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT  
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_KP6]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_PUNCH or current_state == STATE_CLOSE_HEAVY_PUNCH:
-                    if "heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "punch" not in fighter.active_name:
-                        return STATE_CLOSE_HEAVY_PUNCH
-                    return STATE_HEAVY_PUNCH
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_PUNCH:
-                    if "crouch_heavy_punch" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_HEAVY_PUNCH
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_PUNCH:
-                    return STATE_JUMP_HEAVY_PUNCH
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_PUNCH:
-                    return STATE_DIAGONAL_JUMP_HEAVY_PUNCH
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_KP7]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_LIGHT_KICK or current_state == STATE_CLOSE_LIGHT_KICK:
-                    if "light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_LIGHT_KICK
-                    return STATE_LIGHT_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_LIGHT_KICK:
-                    if "crouch_light_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_LIGHT_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_LIGHT_KICK:
-                    return STATE_JUMP_LIGHT_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_LIGHT_KICK:
-                    return STATE_DIAGONAL_JUMP_LIGHT_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_KP8]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_MEDIUM_KICK or current_state == STATE_CLOSE_MEDIUM_KICK:
-                    if "medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_MEDIUM_KICK
-                    return STATE_MEDIUM_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_MEDIUM_KICK:
-                    if "crouch_medium_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_MEDIUM_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_MEDIUM_KICK:
-                    return STATE_JUMP_MEDIUM_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_MEDIUM_KICK:
-                    return STATE_DIAGONAL_JUMP_MEDIUM_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT  
-                else:
-                    return current_state
-            elif keys[pg.K_KP9]:
-                if current_state == STATE_IDLE or "WALK" in current_state or current_state == STATE_HEAVY_KICK or current_state == STATE_CLOSE_HEAVY_KICK:
-                    if "heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_WAIT
-                    if abs(fighter.opponent.pos.x - fighter.pos.x) <= 116 and "kick" not in fighter.active_name:
-                        return STATE_CLOSE_HEAVY_KICK
-                    return STATE_HEAVY_KICK
-                elif current_state == STATE_CROUCH or current_state == STATE_CROUCH_HEAVY_KICK:
-                    if "crouch_heavy_kick" in fighter.active_name and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == True:
-                        return STATE_CROUCH_WAIT
-                    return STATE_CROUCH_HEAVY_KICK
-                elif current_state == STATE_JUMP or "STRAFE" in current_state or current_state == STATE_JUMP_HEAVY_KICK:
-                    return STATE_JUMP_HEAVY_KICK
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_DIAGONAL_JUMP_HEAVY_KICK:
-                    return STATE_DIAGONAL_JUMP_HEAVY_KICK
-                elif current_state == STATE_WAIT:
-                    return STATE_WAIT
-                elif current_state == STATE_CROUCH_WAIT:
-                    return STATE_CROUCH_WAIT
-                else:
-                    return current_state
-            elif keys[pg.K_LEFT]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                if direction == "left":
-                    if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_FORWARD_STRAFE
-                    elif keys[pg.K_KP0]:
-                        return STATE_FORWARD_JUMP
-                    elif current_state == STATE_FORWARD_JUMP:
-                        return current_state
-                    return STATE_WALK
-                else:
-                    if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_BACKWARD_STRAFE
-                    elif keys[pg.K_KP0]:
-                        return STATE_BACKWARD_JUMP
-                    elif current_state == STATE_BACKWARD_JUMP:
-                        return current_state
-                    return STATE_BACKWALK
-            elif keys[pg.K_RIGHT]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                if direction == "left":
-                    if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_BACKWARD_STRAFE
-                    elif keys[pg.K_KP0]:
-                        return STATE_BACKWARD_JUMP
-                    elif current_state == STATE_BACKWARD_JUMP:
-                        return current_state
-                    return STATE_BACKWALK
-                else:
-                    if fighter.active_name == "jump" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                        return STATE_FORWARD_STRAFE
-                    elif keys[pg.K_KP0]:
-                        return STATE_FORWARD_JUMP
-                    elif current_state == STATE_FORWARD_JUMP:
-                        return current_state
-                    return STATE_WALK
-            elif keys[pg.K_DOWN]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                return STATE_CROUCH
-            elif keys[pg.K_KP0]:
-                if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
-                    return current_state
-                elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
-                    return current_state
-                return STATE_JUMP
-            elif "WALK" not in current_state and current_state is not STATE_CROUCH and STATE_WAIT not in current_state:
+            return STATE_BACKWALK
+        else:
+            if fighter.active_name == "jumpR" and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+                return STATE_FORWARD_STRAFE
+            elif jump:
+                return STATE_FORWARD_JUMP
+            elif current_state == STATE_FORWARD_JUMP:
                 return current_state
-            return STATE_IDLE
-    else:
-        pass
+            return STATE_WALK
+    elif down:
+        if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+            return current_state
+        return STATE_CROUCH
+    elif jump:
+        if ("PUNCH" in current_state or "KICK" in current_state) and fighter.active_anim.is_animation_finished(fighter.elapsed_time) == False:
+            return current_state
+        elif current_state == STATE_FORWARD_JUMP or current_state == STATE_BACKWARD_JUMP:
+            return current_state
+        return STATE_JUMP
+    
+    elif "WALK" not in current_state and current_state is not STATE_CROUCH and STATE_WAIT not in current_state:
+        return current_state
+    return STATE_IDLE
+
+    
     
 def state_idle(fighter, state):
     if state == STATE_IDLE and fighter.pos.y == STAGE_FLOOR:
