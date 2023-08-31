@@ -8,7 +8,9 @@ from characters.HitSplash import LightHitSplash, MediumHitSplash, HeavyHitSplash
 
 vec = pg.math.Vector2
 
-mode = "local"
+#localKeyBoard, localLaptop, multiplayer (on same network)
+mode = "localLaptop"
+#set True to see hitboxes and hurtboxes
 debug = True
 
 class FightScene:
@@ -18,9 +20,15 @@ class FightScene:
         self.player1_sprites = pg.sprite.GroupSingle()
         self.player2_sprites = pg.sprite.GroupSingle()
         self.misc_sprites = pg.sprite.Group()
-        if(mode == "local"):
-            self.player1 = Ryu("local", "player1",200, STAGE_FLOOR, "right",self, self.player1_sprites)
-            self.player2 = Ken("local", "player2",1080, STAGE_FLOOR, "left", self, self.player2_sprites)
+        if(mode == "localLaptop"):
+            self.player1 = Ryu("localLaptop", "player1",200, STAGE_FLOOR, "right",self, self.player1_sprites)
+            self.player2 = Ken("localLaptop", "player2",1080, STAGE_FLOOR, "left", self, self.player2_sprites)
+            self.player1.opponent = self.player2
+            self.player2.opponent = self.player1
+            self.statusBar = StatusBar(self.player1, self.player2)
+        elif(mode == "local"):
+            self.player1 = Ryu("localKeyboard", "player1",200, STAGE_FLOOR, "right",self, self.player1_sprites)
+            self.player2 = Ken("localKeyboard", "player2",1080, STAGE_FLOOR, "left", self, self.player2_sprites)
             self.player1.opponent = self.player2
             self.player2.opponent = self.player1
             self.statusBar = StatusBar(self.player1, self.player2)

@@ -1,7 +1,12 @@
+#For laptop, must adjust the sizing and position of everything
 WIDTH = 1280
 HEIGHT = 800
 FPS = 60
 STAGE_FLOOR = 720
+# WIDTH = 1000
+# HEIGHT = 625
+# FPS = 60
+# STAGE_FLOOR = 562.5
 
 #Physics
 ACCELERATION = 1.0 
