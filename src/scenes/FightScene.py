@@ -11,7 +11,7 @@ vec = pg.math.Vector2
 #localKeyBoard, localLaptop, multiplayer (on same network)
 mode = "localLaptop"
 #set True to see hitboxes and hurtboxes
-debug = True
+debug = False
 
 class FightScene:
     def __init__(self, screen):
