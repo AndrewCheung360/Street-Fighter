@@ -20,7 +20,7 @@ This Python project uses the pygame library to recreate the basic features of th
 
 - Go to main.py and run the program to launch the game
 - There are 3 modes: localLaptop, localKeyboard, and multiplayer. To switch modes, go to FightScene.py under the scenes folder and change the value of mode to the respective mode to be run.
-- Go to MoveStates.py under the characters folder to find or modify the keyboard inputs.
+- Check out https://docs.google.com/document/d/1wVZR6e-rF_EQBuVImKvp4zfAWU5ibZGxTj6pl_P5XHM/edit?usp=sharing or go to MoveStates.py under the characters folder to find or modify the keyboard inputs.
 
 ## Upcoming Features and Fixes (Work in Progress)
 
